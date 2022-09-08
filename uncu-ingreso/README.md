@@ -1,29 +1,8 @@
 ---
 # Análisis de datos de los ingresantes a los colegios de la Universidad Nacional de Cuyo para el año 2022.
 
-## Rodrigo Gonzalez y Carlos A. Catania
+## Autores: Rodrigo Gonzalez y Carlos A. Catania
 
-<style type="text/css">
-
-body{
-font-size: 14pt;
-}
-
-/* Headers */s
-h1{
-font-size: 24pt;
-}
-h2{
-font-size: 22pt;
-}
-h3{
-font-size: 20pt;
-}
-h4{
-font-size: 18pt;
-}
-
-</style>
 
 Todos los años alrededor de noviembre, miles de estudiantes del nivel de educación primaria en la provincia de Mendoza postulan a una vacante para ingresar a algunas de las 5 escuelas secundarias que posee la [Universidad Nacional de Cuyo](https://www.uncuyo.edu.ar/secundarios) (UNCuyo) en el Gran Mendoza. Estos colegios son Colegio Universitario Central "José de San Martín" (CUC), Departamento de Aplicación Docente (DAD), Liceo Agrícola y Enológico "Domingo F. Sarmiento" (LAE), Escuela del Magisterio (MAG) y Escuela de Comercio "Martín Zapata" (MZ). A su vez, cada colegio ofrece diferentes orientaciones como en Economía, Ciencias Sociales, Ciencias Naturales, Informática, entre otras. Los 5 colegios ofrecen 8 orientaciones en total. Cabe mencionar que el LAE hace su selección de ingreso antes y por separado del resto de los 4 colegios restantes. De todas formas, se ha decidido incluirlo en este análisis.
 
@@ -409,21 +388,21 @@ ggsave("./uncu_alu_5.png", g5, height = he , width = we * aspect_ratio)
 ```
 -->
 
-![](./uncu_alu_1.png)
+![](./images/uncu_alu_1.png)
 La figura 1 expone que el CUC solo recibe promedios de los rangos R1, R2 y R3. Se verifica que Ciencias Naturales solo admite los mejores promedios, los que están en los rangos R1 y R2.
 
 
-![](./uncu_alu_2.png)
+![](./images/uncu_alu_2.png)
 La figura 2 muestra que el MZ recibe promedios de los rangos R1, R2, R3 y una pequeña parte de R4. Informática está compuesta mayoritariamente por promedios de los rangos R1 y R2. Economía capta promedios de los rangos R1, R2 y R3. Finalmente, Ciencias Sociales recibe promedios de R1, R2, R3 y la pequeña parte de R4.
 
-![](./uncu_alu_3.png)
+![](./images/uncu_alu_3.png)
 Según la figura 3, como en el caso del CUC, Ciencias Naturales del MAG también recibe los mejores promedios. Le siguen las orientaciones de Comunicación y Ciencias Sociales.
 
 
-![](./uncu_alu_4.png)
+![](./images/uncu_alu_4.png)
 En la figura 4 se ve que la única orientación que ofrece el LAE recibe promedios de los 5 rangos.
 
-![](./uncu_alu_5.png)
+![](./images/uncu_alu_5.png)
 
 La figura 5 expone que alrededor de la mitad de los ingresantes al DAD están en el rango R5. Y es Lenguas la que recibe la mayor parte de este rango.
 
