@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/854534/4e9e93946d1848768a06025d4d4ca3fd
+bundleId: https://api.rpubs.com/api/v1/document/854534/4e9e93946d1848768a06025d4d4ca3fd
+url: http://rpubs.com/rodralez/854534
+when: 1643810728.5382
+lastSyncTime: 1643810728.53821
