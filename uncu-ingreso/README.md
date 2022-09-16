@@ -1,5 +1,5 @@
----
-# Análisis de datos de los ingresantes a los colegios de la Universidad Nacional de Cuyo para el año 2022.
+
+# Análisis de datos de los ingresantes a los colegios de la Universidad Nacional de Cuyo para el año 2022
 
 ## Autores: Rodrigo Gonzalez y Carlos A. Catania
 
