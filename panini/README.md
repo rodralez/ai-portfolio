@@ -45,8 +45,7 @@ Although we can use the approximate solution to estimate the number of packs tha
 
 Figure 1 shows the statistical distribution, or more formally the probability density, of the number of packs needed to complete a Panini album without swapping. The distribution is right-skewed with a long right tail. According to 1000 Monte Carlo simulations, on average **888 packs** are needed to complete the album, or **USD 1,110**. This value is pretty close to the one found by the previous formula. Considering a 90% probability, which means that it is very likely that you will need to buy *N* packs at most to complete the album, this number increases to **1096 packs** or **USD 1,370**, a little fortune for the average child.
 
-<img src="./images/p1.png" alt="p1" width="200"/>
-![](./images/p1.png)
+<img src="./images/p1.png" alt="p1" width="600"/>
 
 <p align = "left">
 Fig. 1: Probability density of the number of packs needed to complete a Panini album </br>without swapping with other collectors (1000 simulations).
@@ -70,7 +69,7 @@ Several assumptions are hold for the Monte Carlo simulations when collecting wit
 
 Figure 2 shows the probability density of the number of packs needed to complete a Panini album when cooperating with other **10 collectors**. The distribution is right-skewed again. But the good news is that in this case on average **315** packs are needed to complete the album, or **USD 394**, a third of the money when compared to the no-swapping strategy. And considering a 90% probability, this number drops to **429** packs needed or **USD 536**. This is **Panini-ntastic**!
 
-![](./images/p2.png)
+<img src="./images/p2.png" alt="p2" width="600"/>
 
 <p align = "left">
 Fig. 2: Probability density of the number of packs needed to complete a Panini album </br>when swapping with 10 collectors (1000 simulations).
@@ -82,7 +81,7 @@ It is interesting to evaluate the relationship between the number of collaborato
 
 Figure 3 shows this relationship for 1, 5, 10, 25 and 50 collectors, where 1 collector is the same case as for no-swapping strategy. It can be seen that the relationship is asymptotic, which means that swapping with more collectors is good, but past a certain point it almost makes no difference to swap stickers with additional collectors.
 
-![](./images/p3.png)
+<img src="./images/p3.png" alt="p3" width="600"/>
 
 <p align = "left">
 Fig. 3: Number of collectors vs. packs needed to complete the Panini album (1000 simulations).
@@ -111,7 +110,7 @@ Next, we will repeat the Monte Carlo simulations with extra stickers only for th
 
 Figure 4 shows the probability density of the number of packs needed to complete a Panini album with 20 extra stickers without swapping. We can see that the average number of packs increases from 888 to an astonishing amount of **225,583 packs**  or **USD 281,979**, if extra stickers want to be collected. In other words, you can collect Panini rare stickers or buy a Lamborghini. Insane. 
 
-![](./images/p4.png)
+<img src="./images/p4.png" alt="p4" width="600"/>
 
 <p align = "left">
 Fig. 4: Probability density of number of packs needed to complete a Panini album </br>with 20 extra stickers and without swapping (1000 simulations).
