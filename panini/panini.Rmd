@@ -154,8 +154,8 @@ source("./functions/panini.R")
 load("./data/packs_needed.Rda")
 
 aspect_ratio <- 1.75
-he <- 3
-we <- 3
+he <- 4
+we <- 4
 
 p1 <- plot_density(packs_needed)
 p1
@@ -181,23 +181,23 @@ Several assumptions are hold for the Monte Carlo simulations when collecting wit
 6. At each round collectors are ordered randomly and they search for missing stickers at other collectors' swap stacks in turns, starting for the first collector in the queue.
 7. If two collectors can swap stickers, only the minimum number of needed stickers can be interchanged between collectors. For example, if the first collector in the queue can offer 2 stickers and the second collector in the queue can offer 3 stickers, only 2 stickers can be swapped by both collectors. Then, the first collector in the queue keeps looking for missing stickers at the swap stack of the third collector in the queue, and so on.
 
-<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
-<!-- source("./functions/panini.R") -->
+```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
+source("./functions/panini.R")
 
-<!-- # packs_needed_n2 <- c() -->
-<!-- # for (i in 1:MC) { -->
-<!-- #   source("./panini.R", local = TRUE) -->
-<!-- #   packs_needed_n2[i] <- pcp_swap_mc(CS, M, N) -->
-<!-- # } -->
+# packs_needed_n2 <- c()
+# for (i in 1:MC) {
+#   source("./panini.R", local = TRUE)
+#   packs_needed_n2[i] <- pcp_swap_mc(CS, M, N)
+# }
 
-<!-- packs_needed_n <- foreach(i = 1:MC, -->
-<!--                           .packages = "vecsets", -->
-<!--                           .combine = 'c') %dopar% { -->
-<!--                             pcp_swap_mc(CS, M, N) -->
-<!--                           } -->
+packs_needed_n <- foreach(i = 1:MC,
+                          .packages = "vecsets",
+                          .combine = 'c') %dopar% {
+                            pcp_swap_mc(CS, M, N)
+                          }
 
-<!-- save(packs_needed_n, file = "./data/packs_needed_n.Rda") -->
-<!-- ``` -->
+save(packs_needed_n, file = "./data/packs_needed_n.Rda")
+```
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 load("./data/packs_needed_n.Rda")
@@ -216,7 +216,7 @@ load("./data/packs_needed_n.Rda")
 
 p2 <- plot_density(packs_needed_n)
 p2 
-ggsave("./images/p2.png", p2, height = he , width = we * aspect_ratio)
+ggsave("./images/p2.png", p2, height = he , width = we * aspect_ratio, dpi = 150)
 ```
 <p align = "left">
 Fig. 2: Probability density of the number of packs needed to complete a Panini album </br>when swapping with `r N` collectors (`r MC` simulations).
@@ -228,22 +228,22 @@ It is interesting to evaluate the relationship between the number of collaborato
 
 Figure 3 shows this relationship for 1, 5, 10, 25 and 50 collectors, where 1 collector is the same case as for no-swapping strategy. It can be seen that the relationship is asymptotic, which means that swapping with more collectors is good, but past a certain point it almost makes no difference to swap stickers with additional collectors.
 
-<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
-<!-- range_n <- c(1, 5, 10, 25, 50) -->
+```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
+range_n <- c(1, 5, 10, 25, 50)
 
-<!-- packs_needed_l <- list() -->
-<!-- k <- 1 -->
+packs_needed_l <- list()
+k <- 1
 
-<!-- for (j in range_n) { -->
-<!--   packs_needed_l[[k]] <- foreach(i = 1:MC, -->
-<!--                                  .packages = "vecsets", -->
-<!--                                  .combine = 'c') %dopar% { -->
-<!--                                    pcp_swap_mc(CS, M, j) -->
-<!--                                  } -->
-<!--   k <- k + 1 -->
-<!-- } -->
-<!-- save(packs_needed_l, file="./data/packs_needed_l.Rda") -->
-<!-- ``` -->
+for (j in range_n) {
+  packs_needed_l[[k]] <- foreach(i = 1:MC,
+                                 .packages = "vecsets",
+                                 .combine = 'c') %dopar% {
+                                   pcp_swap_mc(CS, M, j)
+                                 }
+  k <- k + 1
+}
+save(packs_needed_l, file="./data/packs_needed_l.Rda")
+```
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 load("./data/packs_needed_l.Rda")
@@ -261,7 +261,7 @@ source("./functions/panini.R")
 
 p3 <- plot_collectors_vs_packs(range_n, packs_needed_l_m)
 p3
-ggsave("./images/p3.png", p3, height = he , width = we * aspect_ratio)
+ggsave("./images/p3.png", p3, height = he , width = we * aspect_ratio, dpi = 150)
 ```
 <p align = "left">
 Fig. 3: Number of collectors vs. packs needed to complete the Panini album (`r MC` simulations).
@@ -298,16 +298,16 @@ Next, we will repeat the Monte Carlo simulations with extra stickers only for th
   # sum(prob_str)
 ```
 
-<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
-<!-- source("./functions/panini.R") -->
+```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
+source("./functions/panini.R")
 
-<!-- packs_needed_rs <- foreach( -->
-<!--       i = 1:MC, -->
-<!--       .combine = 'c') %dopar% { -->
-<!--   pcp_mc(CS+RS, M, prob_str) -->
-<!--       } -->
-<!-- save(packs_needed_rs, file="./data/packs_needed_rs.Rda") -->
-<!-- ``` -->
+packs_needed_rs <- foreach(
+      i = 1:MC,
+      .combine = 'c') %dopar% {
+  pcp_mc(CS+RS, M, prob_str)
+      }
+save(packs_needed_rs, file="./data/packs_needed_rs.Rda")
+```
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 load("./data/packs_needed_rs.Rda")
@@ -323,12 +323,9 @@ Figure 4 shows the probability density of the number of packs needed to complete
 source("./functions/panini.R")
 load("./data/packs_needed_rs.Rda")
 
-he <- 3.5
-we <- 3.5
-
 p4 <- plot_density(packs_needed_rs)
 p4
-ggsave("./images/p4.png", p4, height = he , width = we * aspect_ratio)
+ggsave("./images/p4.png", p4, height = he , width = we * aspect_ratio, dpi = 150)
 ```
 <p align = "left">
 Fig. 4: Probability density of number of packs needed to complete a Panini album </br>with `r RS` extra stickers and without swapping (`r MC` simulations).

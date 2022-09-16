@@ -1,7 +1,7 @@
 
 # The Panini collector problem
 
-## "How many packs have to be purchased to complete the Panini FIFA World Cup Qatar 2022 album?"
+## How many packs have to be purchased to complete the Panini FIFA World Cup Qatar 2022 album?
 
 ## Authors Rodrigo Gonzalez and Carlos A. Catania
 
