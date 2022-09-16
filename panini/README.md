@@ -45,6 +45,7 @@ Although we can use the approximate solution to estimate the number of packs tha
 
 Figure 1 shows the statistical distribution, or more formally the probability density, of the number of packs needed to complete a Panini album without swapping. The distribution is right-skewed with a long right tail. According to 1000 Monte Carlo simulations, on average **888 packs** are needed to complete the album, or **USD 1,110**. This value is pretty close to the one found by the previous formula. Considering a 90% probability, which means that it is very likely that you will need to buy *N* packs at most to complete the album, this number increases to **1096 packs** or **USD 1,370**, a little fortune for the average child.
 
+<img src="./images/p1.png" alt="p1" width="200"/>
 ![](./images/p1.png)
 
 <p align = "left">

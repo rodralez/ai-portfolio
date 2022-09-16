@@ -154,12 +154,12 @@ source("./functions/panini.R")
 load("./data/packs_needed.Rda")
 
 aspect_ratio <- 1.75
-he <- 4
-we <- 4
+he <- 3
+we <- 3
 
 p1 <- plot_density(packs_needed)
 p1
-ggsave("./images/p1.png", p1, height = he , width = we * aspect_ratio)
+ggsave("./images/p1.png", p1, height = he , width = we * aspect_ratio, dpi = 150)
 ```
 <p align = "left">
 Fig. 1: Probability density of the number of packs needed to complete a Panini album </br>without swapping with other collectors (`r MC` simulations).
@@ -322,6 +322,9 @@ Figure 4 shows the probability density of the number of packs needed to complete
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 source("./functions/panini.R")
 load("./data/packs_needed_rs.Rda")
+
+he <- 3.5
+we <- 3.5
 
 p4 <- plot_density(packs_needed_rs)
 p4
