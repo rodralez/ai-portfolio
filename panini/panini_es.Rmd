@@ -1,0 +1,456 @@
+---
+title: "El problema del coleccionista Panini"
+subtitle: "Una web app para estimar el número de paquetes que se deben comprar para llenar un album Panini"
+author: "Rodrigo Gonzalez y Carlos A. Catania"
+date: "`r format( Sys.time(), '%d/%m/%Y')`"
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango
+---
+
+<style type="text/css">
+body{font-size: 14pt;}
+/* Headers */s
+h1{font-size: 24pt;}
+h2{font-size: 22pt;}
+h3{font-size: 20pt;}
+h4{font-size: 18pt;}
+</style>
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# Cleaning the RStudio environment
+rm(list = ls()) # clean global environment
+cat("\014")  # clean the console
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# Libraries
+library(tictoc)
+library(foreach)
+library(doParallel)
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# Default directory
+knitr::opts_knit$set(root.dir = '/home/rodralez/my/jobs/ds-portfolio/panini/')
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# Functions
+source("./functions/panini.R")
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+## Constants
+# Number of stickers to complete de album
+CS <- 638
+# Number of stickers per pack
+M <- 5
+# Number of Monte Carlo simulations
+MC <- 1e3
+# Number of collectors
+N <- 10
+# Cost of 1 pack in USD
+PRICE <- 1.25
+# Number of rare stickers
+RS <- 20
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+bytes <- file.size("panini_es.Rmd")
+words <- bytes/10
+minutes <- words/200
+```
+
+**Tiempo de lectura: `r round(minutes)` minute(s) @ 200 WPM.**
+
+Cada 4 años, la locura comienza de nuevo: es hora de completar un nuevo álbum de Panini para la Copa Mundial de la FIFA. Este año no es una excepción y la empresa Panini ha lanzado un nuevo álbum con **638** figuritas para coleccionar con motivo de la Copa Mundial FIFA Qatar 2022. ¡Que comience la **Paninimanía**!
+
+La colección Panini Qatar 2022 también incluye **20 figuritas extras** con 14 jugadores consagrados y 6 jugadores novatos. Estas figuritas sin numerar no forman parte del álbum principal. Las figuritas extras son muy difíciles de coleccionar: en promedio, se puede encontrar 1 figurita extra en 100 paquetes, según la información proporcionada en el sitio web de Panini.
+
+Una antigua pregunta que se hace toda la humanidad es *¿cuántos paquetes tengo que comprar para completar el álbum Panini?*. En un esfuerzo por brindar algo de alivio a la población, hemos desarrollado una aplicación web en la que se puede estimar cuántos paquetes de Panini se tienen que comprar en función de la situación en particular: número de figuritas únicas que ya se tienen, número de amigos con quienes se está intercambiando figuritas y el precio de un paquete de Panini. Se puede probar esta <a href="https://model01.ingenieria.uncuyo.edu.ar/panini-app/" target="_blank">aplicación web aquí</a>.
+
+<!-- An ancient question asked by all mankind is *how many packs do I have to buy to complete the Panini album?*. In an effort to bringing some relief to humanity, we have developed a **web application** where you can estimate how many Panini packs you have to buy based on your own situation: number of unique stickers that you have already collected, number of friends you are swapping stickers with, and the price of a Panini pack in your country. You can try this <a href="https://model01.ingenieria.uncuyo.edu.ar/panini-app/" target="_blank">web app here</a>. -->
+
+El resto de este informe se dedicará a exponer lo que está detrás de esta aplicación web.
+
+<!-- The rest of this report will be dedicated to expose *what is under the hood* of this web app.  -->
+
+El <a href="https://en.wikipedia.org/wiki/Coupon_collector%27s_problem" target="_blank">Problema del Coleccionista de Cupones</a> es un marco matemático para estimar cuántos cupones se deben recolectar para ganar un premio de, por ejemplo, una promoción de cereal en caja. A primera vista, la teoría del Problema del Recolector de Cupones puede usarse para saber el número de paquetes que faltan para completar un álbum de Panini, pero no es exactamente el mismo problema. Al intentar completar un álbum de Panini, los coleccionistas deben reunir 638 figuritas al obtener 5 figuritas diferentes al azar al comprar 1 paquete. Panini garantiza que las figuritas dentro de un paquete no se duplican. Además, los coleccionistas de Panini pueden cooperar e intercambiar figuritas duplicadas. Esta es una práctica muy común. Debido a estas particularidades, este problema suele denominarse el **Problema del Coleccionista Panini** (PCP).
+
+<!-- The <a href="https://en.wikipedia.org/wiki/Coupon_collector%27s_problem" target="_blank">Coupon Collector Problem</a> is a mathematical framework to estimate how many coupons have to be collected to win a prize from, for example, an on-pack cereal promotion. At first sight, the Coupon Collector Problem theory can be used to know the number of missing packs to complete a Panini album, but it is not exactly the same problem. When trying to complete a Panini album, collectors must gather `r CS` stickers by getting 5 different stickers randomly when purchasing 1 pack. Panini guarantees that stickers inside a pack are not duplicated. Additionally, Panini collectors can cooperate and swap duplicated stickers. This is a very common practice. Because of these particularities, this problem is usually called the **Panini Collector Problem** (PCP). -->
+
+Entonces, se pueden abordar dos estrategias para completar el álbum Panini:
+
+1. Coleccionar figuritas solo, sin intercambiar con otros coleccionistas.
+2. Coleccionar figuritas y cooperar con otros coleccionistas para completar el álbum, un enfoque más común.
+
+<!-- So, two strategies can be addressed to complete the Panini album: -->
+
+<!-- 1. Collecting stickers alone without swapping stickers with other collectors. -->
+<!-- 2. Collecting stickers and cooperating with other collectors to complete the album, a more common approach. -->
+
+Evaluaremos estos dos escenarios para arrojar algo de luz sobre cuál es la mejor estrategia.
+
+Además, queremos probar el impacto de 20 figuritas extras para completar la colección Panini, el álbum y figuritas adicionales.
+
+<!-- We will evaluate these two scenarios to shed some light to which is the best strategy. -->
+
+<!-- Additionally, we want to test the impact of the `r RS` extra stickers in completing the Panini collection, album plus extra stickers.  -->
+
+Todo el código desarrollado para este informe se puede encontrar en <a href="https://github.com/rodralez/ds-portfolio" target="_blank">este enlace</a>.
+
+<!-- All the code developed for this report can be found at <a href="https://github.com/rodralez/ds-portfolio" target="_blank">this link</a>. -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# Setting for paralel computing
+# create the cluster
+# socket cluster with n.cores nodes on host 'localhost'
+n.cores <- parallel::detectCores() - 1
+my.cluster <- parallel::makeCluster(
+  n.cores, 
+  type = "PSOCK"
+  )
+
+# register it to be used by %dopar%
+doParallel::registerDoParallel(cl = my.cluster)
+# check if it is registered (optional)
+# foreach::getDoParRegistered()
+#how many workers are available? (optional)
+# foreach::getDoParWorkers()
+```
+
+## Estrategia sin intercambio
+
+## Solución aproximada al problema del coleccionista Panini para la estrategia sin intercambio
+
+<!-- ## No swapping strategy -->
+
+<!-- ### Approximate solution to the Panini Collector Problem for the no-swapping strategy -->
+
+El número de figuritas necesarias para completar un álbum Panini se puede estimar mediante la siguiente fórmula. Una muy buena explicación de dónde viene esta fórmula se puede encontrar en la [ref. 1](#CCP),
+
+<!-- The number of stickers needed to complete a Panini album can be estimated by the following formula. A very nice explanation of where this formula comes from can be found at [ref. 1](#CCP), -->
+
+$$figuritas \approx n \cdot (ln(n) + 0.577)$$
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+stick_needed_an <-  CS * (log(CS) + 0.577)
+packs_needed_an <- round (stick_needed_an / M)
+```
+
+donde *ln* es el logaritmo natural y *n* es el número de pegatinas a coleccionar. En el caso del álbum Panini Qatar 2022, n es igual a 638. Entonces, el número de paquetes es,
+
+<!-- where *ln* is the natural logarithm and *n* is the number of stickers to collect. In the case of the Panini Qatar 2022 album, *n* is equal to `r CS`. So, the number of packs is, -->
+
+$$paquetes \approx figuritas  \div 5$$
+La solución aproximada nos dice que en promedio se necesitan **898** paquetes para completar el álbum. Teniendo en cuenta que el precio de 1 paquete con 5 pegatinas es de aproximadamente USD 1,25, como se indica en la [ref. 3](#fortune), se necesitan **USD 1.122** para completar el álbum.
+
+<!-- The approximate solution tell us that on average **`r packs_needed_an`** packs are needed to complete the album. Considering that the price of 1 pack with `r M` stickers is about USD `r PRICE`, as stated at [ref. 3](#fortune), **USD `r format_number( packs_needed_an*PRICE )`** are needed to cover the cost of completing the album. -->
+
+### Aproximación por simulación para la estrategia sin intercambio
+
+<!-- ### Simulation approximation for the no-swapping strategy -->
+
+Aunque podemos usar la solución aproximada para estimar la cantidad de paquetes que se deben comprar, queremos probar otro enfoque para resolver este problema que será útil más adelante. A continuación, estimaremos la cantidad de paquetes necesarios en promedio para completar el álbum Panini generando 1000 simulaciones de Monte Carlo. Una simulación de Monte Carlo es una técnica matemática que se utiliza para estimar los posibles resultados de un evento incierto.
+
+<!-- Although we can use the approximate solution to estimate the number of packs that have to be purchased, we want to try another approach to solve this problem that will be useful later. Next, we will estimate the number of packs needed on average to complete the Panini album by generating `r MC` Monte Carlo simulations. A Monte Carlo simulation is a mathematical technique which is used to estimate the possible outcomes of an uncertain event. -->
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
+<!-- source("./functions/panini.R") -->
+
+<!-- packs_needed <- foreach( -->
+<!--       i = 1:MC, -->
+<!--       .combine = 'c') %dopar% { -->
+<!--   pcp_mc(CS, M) -->
+<!--       } -->
+<!-- save(packs_needed, file="./data/packs_needed.Rda") -->
+<!-- ``` -->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
+load("./data/packs_needed.Rda")
+
+packs_needed_m <- round(mean(packs_needed))
+q <- quantile(packs_needed, probs = seq(0, 1, 0.10))
+q_90 <- round(q[10])
+```
+
+La figura 1 muestra la distribución estadística, o más formalmente la densidad de probabilidad, del número de paquetes necesarios para completar un álbum Panini sin intercambio. La distribución está sesgada a la derecha. Según 1000 simulaciones de Monte Carlo, en promedio se necesitan **899 paquetes** para completar el álbum, o **USD 1.124**. Este valor es bastante cercano al encontrado por la fórmula anterior. Considerando una probabilidad del 90%, lo que significa que es muy probable que necesite comprar N paquetes como máximo para completar el álbum, este número aumenta a  **1.123 paquetes ** o  **USD 1.404 **, una pequeña fortuna para el niño promedio.
+
+<!-- Figure 1 shows the statistical distribution, or more formally the probability density, of the number of packs needed to complete a Panini album without swapping. The distribution is right-skewed with a long right tail. According to `r MC` Monte Carlo simulations, on average **`r packs_needed_m` packs** are needed to complete the album, or **USD `r format_number(packs_needed_m*PRICE)`**. This value is pretty close to the one found by the previous formula. Considering a 90% probability, which means that it is very likely that you will need to buy *N* packs at most to complete the album, this number increases to **`r q_90` packs** or **USD `r format_number(q_90*PRICE)`**, a little fortune for the average child. -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+source("./functions/panini.R")
+load("./data/packs_needed.Rda")
+
+aspect_ratio <- 1.75
+he <- 4
+we <- 4
+
+p1 <- plot_density(packs_needed)
+p1
+ggsave("./images/p1.png", p1, height = he , width = we * aspect_ratio, dpi = 150)
+```
+
+<p align = "left">
+Fig. 1: Densidad de probabilidad del número de paquetes necesarios para completar un  </br>álbum Panini sin intercambio (1000 simulaciones).
+</p>
+
+<!-- <p align = "left"> -->
+<!-- Fig. 1: Probability density of the number of packs needed to complete a Panini album </br>without swapping with other collectors (`r MC` simulations). -->
+<!-- </p> -->
+
+## Estrategia con intercambio
+
+<!-- ## Swapping strategy -->
+
+### Aproximación por simulación para la estrategia con intercambio
+
+<!-- ### Simulation approximation for the swapping strategy -->
+
+Aunque se han propuesto algunas soluciones analíticas para el Problema del Coleccionista Panini con intercambio, estas fórmulas son muy difíciles de resolver para un gran número de figuritas y coleccionistas. Por lo tanto, nuestro enfoque para resolver el PCP con intercambio será mediante el uso de simulaciones de Monte Carlo.
+
+<!-- Even though some formulations have been proposed for the Coupon Collector Problem with swapping, these formulas are very hard to solve for large numbers of stickers and collectors. So, our approach to solve the PCP with swapping will be by using Monte Carlo simulations. -->
+
+Se asumen varios supuestos para las simulaciones de Monte Carlo para esta estrategia:
+
+1. Todas las figuritas tienen la misma probabilidad de aparecer en un paquete (no hay escasez planificada de figuritas), o más formalmente, las figuritas se extraen de una distribución uniforme.
+2. Todos los coleccionistas comienzan a coleccionar al mismo tiempo.
+3. Todos los coleccionistas compran 1 paquete nuevo al mismo tiempo.
+4. Después de comprar un nuevo paquete, los coleccionistas llenan sus álbumes. Las figuritas duplicadas van a la pila de intercambio de figuritas de cada coleccionista.
+5. Luego, comienza una ronda de intercambio de figuritas. Aunque cada coleccionista puede intercambiar con cualquier otro coleccionista, el intercambio de figuritas es entre dos coleccionistas a la vez.
+6. En cada ronda, los coleccionistas se ordenan al azar y buscan por turnos las figuritas faltantes en las pilas de intercambio de otros los coleccionistas, comenzando por el primer coleccionista en la cola.
+7. Si dos coleccionistas pueden intercambiar figuritas, solo se puede intercambiar la cantidad mínima de figuritas. Por ejemplo, si el primer coleccionista en la cola puede ofrecer 2 figuritas y el segundo coleccionista en la cola puede ofrecer 3 figuritas, ambos coleccionistas solo pueden intercambiar 2 figuritas. Luego, el primer coleccionista en la cola sigue buscando las figuritas faltantes en la pila de intercambio del tercer coleccionista de la cola, y así sucesivamente.
+
+<!-- Several assumptions are hold for the Monte Carlo simulations when collecting with swapping: -->
+
+<!-- 1. All stickers have equal probability to show up in a pack (no planned shortage of particular stickers), or more formally, stickers are drawn from an uniform distribution. -->
+<!-- 2. All collectors start collecting at the same time. -->
+<!-- 3. All collectors buy 1 new pack at the same time. -->
+<!-- 4. After buying a new pack, collectors fill their albums. Duplicated stickers go to the individual collector's sticker swap stack. -->
+<!-- 5. Then, a round of sticker swapping starts. Although every collector can swap with any other collectors, the sticker swapping is between two collectors at a time. -->
+<!-- 6. At each round collectors are ordered randomly and they search for missing stickers at other collectors' swap stacks in turns, starting for the first collector in the queue. -->
+<!-- 7. If two collectors can swap stickers, only the minimum number of needed stickers can be interchanged between collectors. For example, if the first collector in the queue can offer 2 stickers and the second collector in the queue can offer 3 stickers, only 2 stickers can be swapped by both collectors. Then, the first collector in the queue keeps looking for missing stickers at the swap stack of the third collector in the queue, and so on. -->
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
+<!-- source("./functions/panini.R") -->
+
+<!-- # packs_needed_n2 <- c() -->
+<!-- # for (i in 1:MC) { -->
+<!-- #   source("./panini.R", local = TRUE) -->
+<!-- #   packs_needed_n2[i] <- pcp_swap_mc(CS, M, N) -->
+<!-- # } -->
+
+<!-- packs_needed_n <- foreach(i = 1:MC, -->
+<!--                           .packages = "vecsets", -->
+<!--                           .combine = 'c') %dopar% { -->
+<!--                             pcp_swap_mc(CS, M, N) -->
+<!--                           } -->
+
+<!-- save(packs_needed_n, file = "./data/packs_needed_n.Rda") -->
+<!-- ``` -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+load("./data/packs_needed_n.Rda")
+
+packs_needed_n_m <- round(mean(packs_needed_n))
+q <- quantile(packs_needed_n, probs = seq(0, 1, 0.10))
+q_90_n <- round(q[10])
+```
+
+La figura 2 muestra la densidad de probabilidad del número de paquetes necesarios para completar un álbum de Panini cuando se coopera con otros **10 coleccionistas**. La distribución vuelve a estar sesgada hacia la derecha. Pero la buena noticia es que, en este caso, se necesitan en promedio **321 paquetes** para completar el álbum, o **USD 401**, un tercio del dinero en comparación con la estrategia sin intercambio. Y considerando una probabilidad del 90%, este número se reduce a **442 paquetes** necesarios o **USD 552**. ¡Esto es **Panini-ntástico**!
+
+<!-- Figure 2 shows the probability density of the number of packs needed to complete a Panini album when cooperating with other **`r N` collectors**. The distribution is right-skewed again. But the good news is that in this case on average **`r packs_needed_n_m`** packs are needed to complete the album, or **USD `r format_number(packs_needed_n_m*PRICE)`**, a third of the money when compared to the no-swapping strategy. And considering a 90% probability, this number drops to `r q_90_n` packs needed or **USD `r format_number(q_90_n*PRICE)`**. This is **Panini-ntastic**! -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+source("./functions/panini.R")
+
+load("./data/packs_needed_n.Rda")
+
+p2 <- plot_density(packs_needed_n)
+p2 
+ggsave("./images/p2.png", p2, height = he , width = we * aspect_ratio, dpi = 150)
+```
+
+<p align = "left">
+Fig. 2: Densidad de probabilidad del número de paquetes necesarios para completar un  </br>álbum Panini con intercambio (1000 simulaciones).
+</p>
+
+<!-- <p align = "left"> -->
+<!-- Fig. 2: Probability density of the number of packs needed to complete a Panini album </br>when swapping with `r N` collectors (`r MC` simulations). -->
+<!-- </p> -->
+
+### Número de coleccionistas versus número de paquetes
+
+<!-- ### Number of collectors versus number of packs -->
+
+Es interesante evaluar la relación que existe entre la cantidad de colaboradores que intercambian figuritas y la cantidad de paquetes que un coleccionista en particular tiene que comprar para completar el álbum de Panini.
+
+La Figura 3 muestra esta relación para 1, 5, 10, 25 y 50 coleccionistas, donde 1 coleccionista es el mismo caso que para la estrategia sin intercambio. Se puede ver que la relación es asintótica, lo que significa que el intercambio con más coleccionistas es bueno, pero pasado un cierto punto casi no hay diferencia en intercambiar figuritas con más coleccionistas.
+
+<!-- It is interesting to evaluate the relationship between the number of collaborators swapping stickers and the number of packs that a particular collector has to purchase to complete the Panini album. -->
+
+<!-- Figure 3 shows this relationship for 1, 5, 10, 25 and 50 collectors, where 1 collector is the same case as for no-swapping strategy. It can be seen that the relationship is asymptotic, which means that swapping with more collectors is good, but past a certain point it almost makes no difference to swap stickers with additional collectors. -->
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
+<!-- range_n <- c(1, 5, 10, 25, 50) -->
+
+<!-- packs_needed_l <- list() -->
+<!-- k <- 1 -->
+
+<!-- for (j in range_n) { -->
+<!--   packs_needed_l[[k]] <- foreach(i = 1:MC, -->
+<!--                                  .packages = "vecsets", -->
+<!--                                  .combine = 'c') %dopar% { -->
+<!--                                    pcp_swap_mc(CS, M, j) -->
+<!--                                  } -->
+<!--   k <- k + 1 -->
+<!-- } -->
+<!-- save(packs_needed_l, file="./data/packs_needed_l.Rda") -->
+<!-- ``` -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+load("./data/packs_needed_l.Rda")
+
+range_n <- c(1, 5, 10, 25, 50)
+
+packs_needed_l_m <- c()
+for (j in 1:length(packs_needed_l)) {
+  packs_needed_l_m[j] <- round(mean(packs_needed_l[[j]]))
+}
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+source("./functions/panini.R")
+
+p3 <- plot_collectors_vs_packs(range_n, packs_needed_l_m)
+p3
+ggsave("./images/p3.png", p3, height = he , width = we * aspect_ratio, dpi = 150)
+```
+
+<p align = "left">
+Fig. 3: Número de coleccionistas vs. paquetes necesarios para llenar un álbum Panini (1000 simulaciones).
+</p>
+
+<!-- <p align = "left"> -->
+<!-- Fig. 3: Number of collectors vs. packs needed to complete the Panini album (`r MC` simulations). -->
+<!-- </p> -->
+
+<!-- ======================================================================= -->
+
+## Figuritas extras
+
+<!-- ## Extra stickers -->
+
+Todos hemos oído hablar de la *teoría conspirativa* de que cada álbum Panini tiene figuritas que son más difíciles de conseguir. Normalmente, estas figuritas están vinculadas a estrellas del fútbol como Lionel Messi o Cristiano Ronaldo. Esta escasez planeada de algunas figuritas por parte de Panini no ha sido probada hasta el momento. De hecho, en un artículo de Sardy y Velenik (ver [ref. 4](#Sardy)) se muestra que incluso si 10 amigos compran 100 paquetes cada uno y realizan un intercambio óptimo, a estos 10 coleccionistas les faltará una figurita poco más del 25% de el tiempo. ¡Y han comprado colectivamente 5000 figuritas!. Esto significa que algunas figuritas podrían percibirse como más escasas que otras.
+
+<!-- We all have heard about the *conspiracy theory* that every Panini album has rare stickers which are harder to collect. Typically, these stickers are linked to football stars such as Lionel Messi or Cristiano Ronaldo. This planned shortage of some stickers by Panini has not been proved so far. In fact, in a paper by Sardy and Velenik (see ) it is shown that even if 10 friends buy 100 packets each and perform optimal swapping, one sticker will be still missing to all these 10 collectors slightly more than 25% of the time. And they have collectively purchased `r  10*100*5` stickers!. This means that some stickers could be perceived as rarer than others. -->
+
+Sin embargo, Panini ofrece 20 figuritas raras para coleccionar conocidas como **figuritas extras** (*extra stickers*). Panini informa en su sitio web que estas figuritas adicionales se insertan al azar, en promedio, cada 100 paquetes, por lo que verdaderamente son más difíciles de coleccionar. Aquí no hay gato encerrado. Estas pegatinas no forman parte del álbum, por lo que se puede completar el álbum incluso sin conseguir una de estas raras figuritas coleccionables. De todos modos, queremos evaluar qué sucede con la cantidad de paquetes cuando el objetivo es completar el álbum Panini y coleccionar estas figuritas adicionales.
+
+<!-- However, Panini does offer `r  RS` rare stickers to collect known as **extra stickers**. Panini reports at its website that these extra stickers are randomly inserted, on average, in every 100 packets, so they are actually harder to collect. No hidden catch here. These stickers are not part of the album, so one can complete the album even without getting one of these rare collectible stickers. Anyway, we want to test what happens with the number of packs needed when the goal is both to complete the Panini album and to collect these extra stickers.  -->
+
+Para las simulaciones con figuritas extras consideramos que:
+
+1. La colección total de figuritas comunes es de 638.
+2. La colección total de figuritas extras es de 20.
+3. La probabilidad de sacar 1 figurita común es $pc=1/638$.
+4. La probabilidad de sacar 1 figurita extra es $px=pc/500$.
+
+<!-- For the extra stickers simulations we consider that: -->
+
+<!-- 1. The total collection of regular stickers is `r  CS`. -->
+<!-- 2. The total collection of extra stickers is `r  RS`. -->
+<!-- 3. The probability of drawing 1 common sticker is $pc = 1/ `r  CS`$.  -->
+<!-- 4. The probability of drawing 1 extra sticker is $px = pc/500$. -->
+
+A continuación, repetiremos las simulaciones de Monte Carlo con figuritas extras solo para la estrategia sin intercambio, porque la mayoría de la gente no cambiará una figurita rara por una común, ¡ni siquiera por 200 figuritas comunes!.
+
+<!-- Next, we will repeat the Monte Carlo simulations with extra stickers only for the no-swapping, because most of the people is not going to swap a rare sticker for just a common sticker, not even 200 stickers!. -->
+
+### Aproximación por simulación para la estrategia sin intercambio con figuritas extras
+
+<!-- ### Simulation approximation for the no-swapping strategy with extra stickers -->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+  csp <- 1/CS
+  rsp <- 1/CS/500
+  tp_rsp <- RS * rsp
+  tp_csp <- 1 - tp_rsp
+  prob_cs <- rep(tp_csp/(CS), CS)
+  prob_rs <- rep(rsp, RS)
+  prob_st <- c(prob_cs, prob_rs)
+  prob_str <- sample(prob_st, CS+RS, replace = FALSE)
+  # sum(prob_str)
+```
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
+<!-- source("./functions/panini.R") -->
+
+<!-- packs_needed_rs <- foreach( -->
+<!--       i = 1:MC, -->
+<!--       .combine = 'c') %dopar% { -->
+<!--   pcp_mc(CS+RS, M, prob_str) -->
+<!--       } -->
+<!-- save(packs_needed_rs, file="./data/packs_needed_rs.Rda") -->
+<!-- ``` -->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+load("./data/packs_needed_rs.Rda")
+
+packs_needed_rs_m <- round(mean(packs_needed_rs))
+q <- quantile(packs_needed_rs, probs = seq(0, 1, 0.10))
+q_90_ns_rs <- round(q[10])
+```
+
+La figura 4 muestra la densidad de probabilidad del número de paquetes necesarios para completar un álbum Panini con 20 figuritas extras sin intercambio. Podemos ver que la cantidad promedio de paquetes aumenta de 899 a una cantidad asombrosa de **227.260 paquetes** o **USD 284.075**, si se desean coleccionar figuritas extras. En otras palabras, se pueden coleccionar figuritas extras de Panini o comprar un Lamborghini. Una locura.
+
+<!-- Figure 4 shows the probability density of the number of packs needed to complete a Panini album with `r RS` extra stickers without swapping. We can see that the average number of packs increases from `r packs_needed_m` to an astonishing amount of **`r format_number(packs_needed_rs_m)` packs**  or **USD `r format_number(packs_needed_rs_m*PRICE)`**, if extra stickers want to be collected. In other words, you can collect Panini rare stickers or buy a Lamborghini. Insane.  -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+source("./functions/panini.R")
+load("./data/packs_needed_rs.Rda")
+
+p4 <- plot_density(packs_needed_rs)
+p4
+ggsave("./images/p4.png", p4, height = he , width = we * aspect_ratio, dpi = 150)
+```
+
+<p align = "left">
+Fig. 4: Densidad de probabilidad del número de paquetes necesarios para completar un álbum Panini </br> con 20 figuritas extras y sin intercambio (1000 simulaciones).
+</p>
+
+<!-- <p align = "left"> -->
+<!-- Fig. 4: Probability density of number of packs needed to complete a Panini album </br>with `r RS` extra stickers and without swapping (`r MC` simulations). -->
+<!-- </p> -->
+<!-- ======================================================================= -->
+
+## Conclusiones
+
+<!-- ## Conclusions -->
+
+Claramente, la mejor estrategia para completar el álbum Panini Qatar 2022 es intercambiar figuritas con otros coleccionistas, cuantos más coleccionistas mejor hasta cierto punto. Incluso si intercambias figuritas solo con 4 personas, la cantidad de paquetes para completar el álbum se reduce a 400 (ver la Fig. 3), que es menos de la mitad de los paquetes necesarios en comparación con la colección individual. Finalmente, recolectar figuritas extras es realmente difícil y tiene un fuerte impacto en la cantidad de paquetes que se deben comprar. Parece que un mejor enfoque es "hacer trampa" y comprar estas figuritas raras directamente en línea.
+
+<!-- Clearly, the best strategy to complete the Panini Qatar 2022 album is to swap stickers with other collectors, the more collectors the better to some extent. Even if you trade stickers with 4 people only, the number of packs to complete the album drops to 400 (see Fig. 3), which is less than half of packs needed when compared to collecting alone. Finally, collecting extra stickers is really hard and has a strong impact on the number of packs that have to be purchased. It seems that a better approach is “cheating” and buying these rare stickers directly online. -->
+
+<!-- ======================================================================= -->
+
+## Referencias
+<!-- ## References -->
+<a name="references"></a>
+
+1. <a name="CCP"></a> Andy Hayes and Geoff Pilling. Coupon Collector Problem. Accessed on September 2022, <a href="https://brilliant.org/wiki/coupon-collector-problem/" target="_blank">link</a>. 
+
+2. <a name="Delmarcelle"></a> Delmarcelle, O., & Vrins, F. (2019). The Panini collector’s problem: optimal strategy and trading analysis (Doctoral dissertation, Master thesis), <a href="https://dial.uclouvain.be/downloader/downloader.php?pid=thesis%3A20994&datastream=PDF_01" target="_blank">pdf</a>.
+
+3. <a name="fortune"></a> Fortune Magazine. Inflation hits one of soccer fans’ favorite pastimes as filling the World Cup Panini sticker album will cost over $1,000, 
+<a href="https://fortune.com/2022/08/30/world-cup-soccer-inflation-panini-sticker-album-fifa/" target="_blank">link</a>. 
+
+4. <a name="Sardy"></a> Sardy, S., & Velenik, Y. (2010). Paninimania: sticker rarity and cost-effective strategy. Swiss Statistical Society, 2-6, <a href="https://www.unige.ch/math/folks/velenik/Vulg/Paninimania.pdf" target="_blank">pdf</a>.
+
+</br>
+</br>
+</br>

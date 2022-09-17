@@ -5,11 +5,11 @@
 
 ## Authors Rodrigo Gonzalez and Carlos A. Catania
 
-**Reading time: 9 minute(s) @ 200 WPM.**
+**Reading time: 10 minute(s) @ 200 WPM.**
 
-Every 4 years the madness starts all over again: it is time to complete a new Panini album for the FIFA World Cup. This year is not an exception and the Panini company has released a new album with **`r CS` stickers** to collect due to the FIFA World Cup Qatar 2022. Let the **Paninimania** begin!
+Every 4 years the madness starts all over again: it is time to complete a new Panini album for the FIFA World Cup. This year is not an exception and the Panini company has released a new album with **638 stickers** to collect due to the FIFA World Cup Qatar 2022. Let the **Paninimania** begin!
 
-The Panini Qatar 2022 collection also includes **`r RS` extra stickers** featuring 14 legendary players and 6 rookie players. These unnumbered stickers are not part of the main album. Extra stickers are really hard to collect: on average 1 extra sticker can be found in 100 packs, according to the information provided at the Panini website. 
+The Panini Qatar 2022 collection also includes **20 extra stickers** featuring 14 legendary players and 6 rookie players. These unnumbered stickers are not part of the main album. Extra stickers are really hard to collect: on average 1 extra sticker can be found in 100 packs, according to the information provided at the Panini website. 
 
 An ancient question asked by all mankind is *how many packs do I have to buy to complete the Panini album?*. In an effort to bringing some relief to humanity, we have developed a **web application** where you can estimate how many Panini packs you have to buy based on your own situation: number of unique stickers that you have already collected, number of friends you are swapping stickers with, and the price of a Panini pack in your country. You can try this <a href="https://model01.ingenieria.uncuyo.edu.ar/panini-app/" target="_blank">web app here</a>.
 
@@ -24,7 +24,7 @@ So, two strategies can be addressed to complete the Panini album:
 
 We will evaluate these two scenarios to shed some light to which is the best strategy.
 
-Additionally, we want to test the impact of the `r RS` extra stickers in completing the Panini collection, album plus extra stickers. 
+Additionally, we want to test the impact of the 20 extra stickers in completing the Panini collection, album plus extra stickers. 
 
 All the code developed for this report can be found at <a href="https://github.com/rodralez/ds-portfolio" target="_blank">this link</a>.
 

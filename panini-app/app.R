@@ -10,7 +10,7 @@ library(bslib)
 
 i18n <-
   Translator$new(translation_json_path = "./data/translation.json")
-i18n$set_translation_language("en")
+i18n$set_translation_language("EN")
 
 source("./R/panini.R", local = TRUE)
 
@@ -41,18 +41,30 @@ ui <- fluidPage(
   titlePanel(i18n$t("The Panini collector problem")),
   
   h3(
-    i18n$t("How many packs have to be purchased to complete the Panini album?")
+    i18n$t("A web app to estimate how many packs to complete a Panini album")
   ),
-  
-  span(i18n$t("by Rodrigo Gonzalez"), style = "font-size: 22px; color: black;"),
-  span("(", style = "font-size: 22px; color: black;"),
+
+  span(i18n$t("by Rodrigo Gonzalez"), style = "font-size: 21px; color: black;"),
+  span("(", style = "font-size: 21px; color: black;"),
   tags$a(
     href = "https://github.com/rodralez/ds-portfolio",
     "github.com/rodralez",
-    style = "font-size: 22px; color: blue;",
+    style = "font-size: 21px; color: blue;",
     target = "_blank"
   ),
-  span(")", style = "font-size: 22px; color: black;"),
+  span(")", style = "font-size: 21px; color: black;"),
+  
+  br(),
+  
+  span(i18n$t("For more information about theory behind this web app, "), 
+       style = "font-size: 21px; color: black;"),
+  tags$a(
+    href = "https://rpubs.com/rodralez/panini",
+    i18n$t("please read our report"),
+    style = "font-size: 21px; color: blue;",
+    target = "_blank"
+  ),
+  span(".", style = "font-size: 21px; color: black;"),
   
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
@@ -93,7 +105,7 @@ ui <- fluidPage(
       numericInput(
         "PRICE",
         i18n$t("How much a pack of stickers in your country?"),
-        1,
+        1.25,
         min = 0,
         max = 100000
       ),
@@ -146,7 +158,7 @@ server <- function(input, output, session) {
   
   output$pack_q90_str <- renderText({
     paste(
-      i18n$t("However, there is a 90% chance that you need at least"),
+      i18n$t("However, there is a 90% chance that you need at most"),
       print(panini$packs_q90),
       i18n$t("packs or spend $"),
       format(round(

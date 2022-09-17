@@ -35,7 +35,7 @@ library(tidyverse)
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 # Default directory
-knitr::opts_knit$set(root.dir = '/home/rodralez/hostdir/jobs/ds-portfolio/panini/')
+knitr::opts_knit$set(root.dir = '/home/rodralez/my/jobs/ds-portfolio/panini/')
 ```
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
