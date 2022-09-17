@@ -1,66 +1,74 @@
 {
-  "languages": ["en", "es"],
+  "languages": ["EN", "ES"],
   "translation": 
   [
-      {"en": "by Rodrigo Gonzalez", 
-      "es": "por Rodrigo Gonzalez"
+      {"EN": "by Rodrigo Gonzalez", 
+      "ES": "por Rodrigo Gonzalez"
       },
-      {"en": "Change language", 
-      "es": "Cambia el idioma"
+      {"EN": "Change language", 
+      "ES": "Cambia el idioma"
       },
-      {"en": "The Panini collector problem", 
-      "es": "El problema del coleccionista de Panini"
+      {"EN": "The Panini collector problem", 
+      "ES": "El problema del coleccionista de Panini"
       },
-      {"en": "How many packs have to be purchased to complete the Panini album?",          
-      "es": "¿Cuántos paquetes se deben comprar para completar el album de Panini?"
-      },
-      {
-        "en": "Number of total stickers to collect (max 1000)",
-        "es": "Cantidad de figuritas a coleccionar (max 1000)"
+      {"EN": "A web app to estimate how many packs to complete a Panini album",          
+      "ES": "Web app para estimar el número de paquetes para llenar un album Panini"
       },
       {
-        "en": "How many different stickers do you already have? (max 1000)",
-        "es": "¿Cuántas figuritas únicas ya tienes? (max 1000)"
+        "EN": "Number of total stickers to collect (max 1000)",
+        "ES": "Cantidad de figuritas a coleccionar (max 1000)"
       },
       {
-        "en": "How many people are you swapping stickers with? (max 15)",
-        "es": "¿Con cuántas personas estás intercambiando figuritas? (max 15)"
+        "EN": "How many different stickers do you already have? (max 1000)",
+        "ES": "¿Cuántas figuritas únicas ya tienes? (max 1000)"
       },
       {
-        "en": "Number of rare stickers, if any (max 20)",
-        "es": "Cantidad de figuritas difíciles (max 20)"      
+        "EN": "How many people are you swapping stickers with? (max 15)",
+        "ES": "¿Con cuántas personas estás intercambiando figuritas? (max 15)"
       },
       {
-        "en": "How much a pack of stickers in your country?",
-        "es": "¿Cuánto sale un paquete figuritas en tu pais?"      
+        "EN": "Number of rare stickers, if any (max 20)",
+        "ES": "Cantidad de figuritas difíciles (max 20)"      
       },
       {
-        "en": "On average, you need to purchase",
-        "es": "En promedio vas a necesitar comprar"      
+        "EN": "How much a pack of stickers in your country?",
+        "ES": "¿Cuánto sale un paquete figuritas en tu pais?"      
       },
       {
-        "en": "packs or spend $",
-        "es": "paquetes o gastar $"      
+        "EN": "On average, you need to purchase",
+        "ES": "En promedio vas a necesitar comprar"      
+      },
+      {
+        "EN": "packs or spend $",
+        "ES": "paquetes o gastar $"      
       },      
       {
-        "en": " to complete your Panini album.",
-        "es": " para completar tu album Panini."      
+        "EN": " to complete your Panini album.",
+        "ES": " para completar tu album Panini."      
       },
       {
-        "en": "However, there is a 90% chance that you need at least",
-        "es": "Sin embargo, hay 90% de probabilidades de que necesites al menos"      
+        "EN": "However, there is a 90% chance that you need at most",
+        "ES": "Sin embargo, hay 90% de probabilidades de que necesites como mucho"      
       },
       {
-        "en": "A negative number? It makes no sense!",
-        "es": "¿Un número negativo? ¡No tiene sentido!"      
+        "EN": "A negative number? It makes no sense!",
+        "ES": "¿Un número negativo? ¡No tiene sentido!"      
       },
       {
-        "en": "Please, check the numbers on the left. Something is wrong :-/",
-        "es": "Por favor, revisa los números de la izquierda. Algo está mal :-/"      
+        "EN": "Please, check the numbers on the left. Something is wrong :-/",
+        "ES": "Por favor, revisa los números de la izquierda. Algo está mal :-/"      
       },
       {
-        "en": ",",
-        "es": "."      
+        "EN": ",",
+        "ES": "."      
+      },
+      {
+        "EN": "For more information about theory behind this web app, ",
+        "ES": "Para más info sobre la teoría detrás de esta web app, "      
+      },
+      {
+        "EN": "please read our report",
+        "ES": "por favor lee nuestro reporte"      
       }
   ]
 }
