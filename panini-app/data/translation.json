@@ -1,0 +1,66 @@
+{
+  "languages": ["en", "es"],
+  "translation": 
+  [
+      {"en": "by Rodrigo Gonzalez", 
+      "es": "por Rodrigo Gonzalez"
+      },
+      {"en": "Change language", 
+      "es": "Cambia el idioma"
+      },
+      {"en": "The Panini collector problem", 
+      "es": "El problema del coleccionista de Panini"
+      },
+      {"en": "How many packs have to be purchased to complete the Panini album?",          
+      "es": "¿Cuántos paquetes se deben comprar para completar el album de Panini?"
+      },
+      {
+        "en": "Number of total stickers to collect (max 1000)",
+        "es": "Cantidad de figuritas a coleccionar (max 1000)"
+      },
+      {
+        "en": "How many different stickers do you already have? (max 1000)",
+        "es": "¿Cuántas figuritas únicas ya tienes? (max 1000)"
+      },
+      {
+        "en": "How many people are you swapping stickers with? (max 15)",
+        "es": "¿Con cuántas personas estás intercambiando figuritas? (max 15)"
+      },
+      {
+        "en": "Number of rare stickers, if any (max 20)",
+        "es": "Cantidad de figuritas difíciles (max 20)"      
+      },
+      {
+        "en": "How much a pack of stickers in your country?",
+        "es": "¿Cuánto sale un paquete figuritas en tu pais?"      
+      },
+      {
+        "en": "On average, you need to purchase",
+        "es": "En promedio vas a necesitar comprar"      
+      },
+      {
+        "en": "packs or spend $",
+        "es": "paquetes o gastar $"      
+      },      
+      {
+        "en": " to complete your Panini album.",
+        "es": " para completar tu album Panini."      
+      },
+      {
+        "en": "However, there is a 90% chance that you need at least",
+        "es": "Sin embargo, hay 90% de probabilidades de que necesites al menos"      
+      },
+      {
+        "en": "A negative number? It makes no sense!",
+        "es": "¿Un número negativo? ¡No tiene sentido!"      
+      },
+      {
+        "en": "Please, check the numbers on the left. Something is wrong :-/",
+        "es": "Por favor, revisa los números de la izquierda. Algo está mal :-/"      
+      },
+      {
+        "en": ",",
+        "es": "."      
+      }
+  ]
+}
