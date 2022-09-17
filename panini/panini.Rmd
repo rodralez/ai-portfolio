@@ -1,6 +1,6 @@
 ---
 title: "The Panini collector problem"
-subtitle: "How many packs have to be purchased to complete the Panini FIFA World Cup Qatar 2022 album?"
+subtitle: "A web app to estimate how many packs have to be purchased to complete a Panini album"
 author: "Rodrigo Gonzalez and Carlos A. Catania"
 date: "`r format( Sys.time(), '%d/%m/%Y')`"
 output:
@@ -69,23 +69,24 @@ minutes <- words/200
 
 Every 4 years the madness starts all over again: it is time to complete a new Panini album for the FIFA World Cup. This year is not an exception and the Panini company has released a new album with **`r CS` stickers** to collect due to the FIFA World Cup Qatar 2022. Let the **Paninimania** begin!
 
-One question that usually arises is *how many packs do I have to buy to complete the Panini album?*. Luckily, probability theory has an answer for that question. The [Coupon Collector Problem](https://en.wikipedia.org/wiki/Coupon_collector%27s_problem) is a theoretical framework to estimate how many coupons have to be collected to win a prize from, for example, an on-pack cereal promotion. At first sight, the Coupon Collector Problem theory can be used to answer that question, but it is not exactly the same problem. When trying to complete the Panini album, collectors must gather `r CS` stickers by getting 5 different stickers randomly when purchasing 1 pack. Panini guarantees that stickers inside a pack are not duplicated. Additionally, Panini collectors can cooperate and swap duplicated stickers. This is a very common practice. Because of these particularities, this problem is usually called the **Panini Collector Problem** (PCP).
+The Panini Qatar 2022 collection also includes **`r RS` extra stickers** featuring 14 legendary players and 6 rookie players. These unnumbered stickers are not part of the main album. Extra stickers are really hard to collect: on average 1 extra sticker can be found in 100 packs, according to the information provided at the Panini website. 
 
-Several papers can be found in the scientific literature that address the PCP. In this report we will try to bring to a broader public the main ideas and results behind these previous publications. In particular, we have focused on two papers. For more details, please see the [References](#references) section.
+An ancient question asked by all mankind is *how many packs do I have to buy to complete the Panini album?*. In an effort to bringing some relief to humanity, we have developed a **web application** where you can estimate how many Panini packs you have to buy based on your own situation: number of unique stickers that you have already collected, number of friends you are swapping stickers with, and the price of a Panini pack in your country. You can try this <a href="https://model01.ingenieria.uncuyo.edu.ar/panini-app/" target="_blank">web app here</a>.
 
-So, as mentioned, two strategies can be addressed to complete the Panini album:
+The rest of this report will be dedicated to expose *what is under the hood* of this web app. 
+
+The <a href="https://en.wikipedia.org/wiki/Coupon_collector%27s_problem" target="_blank">Coupon Collector Problem</a> is a mathematical framework to estimate how many coupons have to be collected to win a prize from, for example, an on-pack cereal promotion. At first sight, the Coupon Collector Problem theory can be used to know the number of missing packs to complete a Panini album, but it is not exactly the same problem. When trying to complete a Panini album, collectors must gather `r CS` stickers by getting 5 different stickers randomly when purchasing 1 pack. Panini guarantees that stickers inside a pack are not duplicated. Additionally, Panini collectors can cooperate and swap duplicated stickers. This is a very common practice. Because of these particularities, this problem is usually called the **Panini Collector Problem** (PCP).
+
+So, two strategies can be addressed to complete the Panini album:
 
 1. Collecting stickers alone without swapping stickers with other collectors.
 2. Collecting stickers and cooperating with other collectors to complete the album, a more common approach.
 
-In this report we will evaluate these two scenarios to shed some light to which is the best strategy.
+We will evaluate these two scenarios to shed some light to which is the best strategy.
 
-The Panini Qatar 2022 collection also includes **`r RS` extra stickers** featuring 14 legendary players and 6 rookie players printed in 4 different color variants. Although these unnumbered stickers are not part of the main album, we want to evaluate the impact of these rare stickers in completing the Panini collection, album plus extra stickers.
+Additionally, we want to test the impact of the `r RS` extra stickers in completing the Panini collection, album plus extra stickers. 
 
-<!-- In fact, there is a third strategy but we will discuss about it at the end of this report. -->
-
-All the code developed for this report can be found at [this link](https://github.com/rodralez/ds-portfolio).
-
+All the code developed for this report can be found at <a href="https://github.com/rodralez/ds-portfolio" target="_blank">this link</a>.
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 # Setting for paralel computing
@@ -128,16 +129,16 @@ The approximate solution tell us that on average **`r packs_needed_an`** packs a
 
 Although we can use the approximate solution to estimate the number of packs that have to be purchased, we want to try another approach to solve this problem that will be useful later. Next, we will estimate the number of packs needed on average to complete the Panini album by generating `r MC` Monte Carlo simulations. A Monte Carlo simulation is a mathematical technique which is used to estimate the possible outcomes of an uncertain event.
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
-source("./functions/panini.R")
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'} -->
+<!-- source("./functions/panini.R") -->
 
-packs_needed <- foreach(
-      i = 1:MC,
-      .combine = 'c') %dopar% {
-  pcp_mc(CS, M)
-      }
-save(packs_needed, file="./data/packs_needed.Rda")
-```
+<!-- packs_needed <- foreach( -->
+<!--       i = 1:MC, -->
+<!--       .combine = 'c') %dopar% { -->
+<!--   pcp_mc(CS, M) -->
+<!--       } -->
+<!-- save(packs_needed, file="./data/packs_needed.Rda") -->
+<!-- ``` -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE, cache=TRUE, results='hide'}
 load("./data/packs_needed.Rda")
@@ -342,13 +343,14 @@ Clearly, the best strategy to complete the Panini Qatar 2022 album is to swap st
 ## References
 <a name="references"></a>
 
-1. <a name="CCP"></a> Andy Hayes and Geoff Pilling. Coupon Collector Problem. Accessed on September 2022, [link](https://brilliant.org/wiki/coupon-collector-problem/). 
+1. <a name="CCP"></a> Andy Hayes and Geoff Pilling. Coupon Collector Problem. Accessed on September 2022, <a href="https://brilliant.org/wiki/coupon-collector-problem/" target="_blank">link</a>. 
 
-2. <a name="Delmarcelle"></a> Delmarcelle, O., & Vrins, F. (2019). The Panini collector’s problem: optimal strategy and trading analysis (Doctoral dissertation, Master thesis), [pdf](https://dial.uclouvain.be/downloader/downloader.php?pid=thesis%3A20994&datastream=PDF_01).
+2. <a name="Delmarcelle"></a> Delmarcelle, O., & Vrins, F. (2019). The Panini collector’s problem: optimal strategy and trading analysis (Doctoral dissertation, Master thesis), <a href="https://dial.uclouvain.be/downloader/downloader.php?pid=thesis%3A20994&datastream=PDF_01" target="_blank">pdf</a>.
 
-3. <a name="fortune"></a> Fortune Magazine. Inflation hits one of soccer fans’ favorite pastimes as filling the World Cup Panini sticker album will cost over $1,000, [link](https://fortune.com/2022/08/30/world-cup-soccer-inflation-panini-sticker-album-fifa/).
+3. <a name="fortune"></a> Fortune Magazine. Inflation hits one of soccer fans’ favorite pastimes as filling the World Cup Panini sticker album will cost over $1,000, 
+<a href="https://fortune.com/2022/08/30/world-cup-soccer-inflation-panini-sticker-album-fifa/" target="_blank">link</a>. 
 
-4. <a name="Sardy"></a> Sardy, S., & Velenik, Y. (2010). Paninimania: sticker rarity and cost-effective strategy. Swiss Statistical Society, 2-6, [pdf](https://www.unige.ch/math/folks/velenik/Vulg/Paninimania.pdf).
+4. <a name="Sardy"></a> Sardy, S., & Velenik, Y. (2010). Paninimania: sticker rarity and cost-effective strategy. Swiss Statistical Society, 2-6, <a href="https://www.unige.ch/math/folks/velenik/Vulg/Paninimania.pdf" target="_blank">pdf</a>.
 
 </br>
 </br>
