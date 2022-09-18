@@ -217,13 +217,13 @@ plot_density <- function(packs_needed) {
          ) +
     annotate(
       "text",
-      x = packs_needed_m-50,
+      x = packs_needed_m - packs_needed_m*0.075,
       y = -0.05,
       label = sprintf("mean=%g", packs_needed_m)
     ) +
     annotate(
       "text",
-      x = q[10]+50,
+      x = q[10] + q[10]*0.075,
       y = -0.05,
       label = sprintf("90%%=%g", q_90)
     ) +

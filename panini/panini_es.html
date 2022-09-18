@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -337,7 +336,7 @@ pre code {
 <h3 class="subtitle">Una web app para estimar el número de paquetes que
 se deben comprar para llenar un album Panini</h3>
 <h4 class="author">Rodrigo Gonzalez y Carlos A. Catania</h4>
-<h4 class="date">17/09/2022</h4>
+<h4 class="date">18/09/2022</h4>
 
 </div>
 
@@ -380,10 +379,10 @@ esta aplicación web.</p>
 <p>El
 <a href="https://en.wikipedia.org/wiki/Coupon_collector%27s_problem" target="_blank">Problema
 del Coleccionista de Cupones</a> es un marco matemático para estimar
-cuántos cupones se deben recolectar para ganar un premio de, por
+cuántos cupones se deben coleccionar para ganar un premio de, por
 ejemplo, una promoción de cereal en caja. A primera vista, la teoría del
-Problema del Recolector de Cupones puede usarse para saber el número de
-paquetes que faltan para completar un álbum de Panini, pero no es
+Problema del Coleccionista de Cupones puede usarse para saber el número
+de paquetes que faltan para completar un álbum de Panini, pero no es
 exactamente el mismo problema. Al intentar completar un álbum de Panini,
 los coleccionistas deben reunir 638 figuritas al obtener 5 figuritas
 diferentes al azar al comprar 1 paquete. Panini garantiza que las
@@ -430,13 +429,13 @@ de dónde viene esta fórmula se puede encontrar en la <a href="#CCP">ref.
 <p><span class="math display">\[figuritas \approx n \cdot (ln(n) +
 0.577)\]</span></p>
 <p>donde <em>ln</em> es el logaritmo natural y <em>n</em> es el número
-de pegatinas a coleccionar. En el caso del álbum Panini Qatar 2022, n es
+de figuritas a coleccionar. En el caso del álbum Panini Qatar 2022, n es
 igual a 638. Entonces, el número de paquetes es,</p>
 <!-- where *ln* is the natural logarithm and *n* is the number of stickers to collect. In the case of the Panini Qatar 2022 album, *n* is equal to 638. So, the number of packs is, -->
 <p><span class="math display">\[paquetes \approx figuritas  \div
 5\]</span> La solución aproximada nos dice que en promedio se necesitan
 <strong>898</strong> paquetes para completar el álbum. Teniendo en
-cuenta que el precio de 1 paquete con 5 pegatinas es de aproximadamente
+cuenta que el precio de 1 paquete con 5 figuritas es de aproximadamente
 USD 1,25, como se indica en la <a href="#fortune">ref. 3</a>, se
 necesitan <strong>USD 1.122</strong> para completar el álbum.</p>
 <!-- The approximate solution tell us that on average **898** packs are needed to complete the album. Considering that the price of 1 pack with 5 stickers is about USD 1.25, as stated at [ref. 3](#fortune), **USD 1,122** are needed to cover the cost of completing the album. -->
@@ -623,7 +622,7 @@ conocidas como <strong>figuritas extras</strong> (<em>extra
 stickers</em>). Panini informa en su sitio web que estas figuritas
 adicionales se insertan al azar, en promedio, cada 100 paquetes, por lo
 que verdaderamente son más difíciles de coleccionar. Aquí no hay gato
-encerrado. Estas pegatinas no forman parte del álbum, por lo que se
+encerrado. Estas figuritas no forman parte del álbum, por lo que se
 puede completar el álbum incluso sin conseguir una de estas raras
 figuritas coleccionables. De todos modos, queremos evaluar qué sucede
 con la cantidad de paquetes cuando el objetivo es completar el álbum
@@ -688,7 +687,7 @@ coleccionistas mejor hasta cierto punto. Incluso si intercambias
 figuritas solo con 4 personas, la cantidad de paquetes para completar el
 álbum se reduce a 400 (ver la Fig. 3), que es menos de la mitad de los
 paquetes necesarios en comparación con la colección individual.
-Finalmente, recolectar figuritas extras es realmente difícil y tiene un
+Finalmente, coleccionar figuritas extras es realmente difícil y tiene un
 fuerte impacto en la cantidad de paquetes que se deben comprar. Parece
 que un mejor enfoque es “hacer trampa” y comprar estas figuritas raras
 directamente en línea.</p>

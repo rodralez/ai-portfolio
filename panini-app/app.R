@@ -14,14 +14,14 @@ i18n$set_translation_language("EN")
 
 source("./R/panini.R", local = TRUE)
 
-# Define UI for app that draws a histogram ----
+# ====== UI
 ui <- fluidPage(
   shiny.i18n::usei18n(i18n),
   
   tags$head(
     tags$meta(name = "author", content = "Rodrigo Gonzalez"),
     tags$meta(name = "url", content = "https://github.com/rodralez/ds-portfolio"),
-    tags$meta(name = "creation_date", content = "15/09/2022")
+    tags$meta(name = "creation_date", content = "17/09/2022")
   ),
   
   div(
@@ -43,7 +43,7 @@ ui <- fluidPage(
   h3(
     i18n$t("A web app to estimate how many packs to complete a Panini album")
   ),
-
+  
   span(i18n$t("by Rodrigo Gonzalez"), style = "font-size: 21px; color: black;"),
   span("(", style = "font-size: 21px; color: black;"),
   tags$a(
@@ -56,8 +56,10 @@ ui <- fluidPage(
   
   br(),
   
-  span(i18n$t("For more information about theory behind this web app, "), 
-       style = "font-size: 21px; color: black;"),
+  span(
+    i18n$t("For more information about theory behind this web app, "),
+    style = "font-size: 21px; color: black;"
+  ),
   tags$a(
     href = "https://rpubs.com/rodralez/panini",
     i18n$t("please read our report"),
@@ -94,20 +96,12 @@ ui <- fluidPage(
         max = 15
       ),
       
-      # numericInput(
-      #   "RS",
-      #   i18n$t("Number of rare stickers, if any (max 20)"),
-      #   0,
-      #   min = 0,
-      #   max = 20
-      # ),
-      
       numericInput(
         "PRICE",
         i18n$t("How much a pack of stickers in your country?"),
         1.25,
         min = 0,
-        max = 100000
+        max = 1000000
       ),
       
       actionButton("panini_button", label = "Panini!"),
@@ -123,16 +117,13 @@ ui <- fluidPage(
     )
   )
 )
-
-# Define server logic required to draw a histogram ----
+# ====== SERVER
 server <- function(input, output, session) {
   panini <- reactiveValues(var = NULL)
   load("./data/packs_needed.Rda")
   panini$packs_needed_n <- packs_needed
   
   observeEvent(input$selected_language, {
-    # This print is just for demonstration
-    # print(paste("Language change!", input$selected_language))
     # Here is where we update language in session
     shiny.i18n::update_lang(session, input$selected_language)
   })
@@ -151,7 +142,6 @@ server <- function(input, output, session) {
       format(round(
         as.numeric(input$PRICE * panini$packs_m)
       ), big.mark = i18n$t(",")),
-      # print(input$PRICE * panini$packs_m),
       i18n$t(" to complete your Panini album.")
     )
   })
@@ -164,66 +154,64 @@ server <- function(input, output, session) {
       format(round(
         as.numeric(input$PRICE * panini$packs_q90)
       ), big.mark = i18n$t(",")),
-      # print(input$PRICE * panini$packs_q90),
       i18n$t(" to complete your Panini album.")
     )
   })
   
+  observeEvent(input$US, {
+    req(input$CS,input$US)
+    if ((input$CS - input$US) < 20) {
+      panini$error_msg <-
+        paste(i18n$t("At least 20 stickers should be missing :-/"))
+    } else{
+      panini$error_msg <- paste("")
+    }
+  })
+  
   # ====== Main observer
   observeEvent(input$panini_button, {
-    if (req(input$CS, input$US, input$N, input$PRICE)) {
-      # Constants
-      M <- 5
-      MC <- 100
-      # a <- input$panini_button
-      CS <- input$CS
-      US <- input$US
-      N <- input$N
-      PRICE <- input$PRICE
-      
-      if (CS > 1000) {
-        CS <- 1000
-      }
-      if (US > 1000) {
-        US <- 1000
-      }
-      if (N > 15) {
-        N <- 15
-      }
-      if (PRICE > 1000000) {
-        PRICE <- 1000000
-      }
-      
-      # Setting for paralel computing
-      n.cores <- parallel::detectCores() - 1
-      my.cluster <- parallel::makeCluster(n.cores, type = "PSOCK")
-      # register it to be used by %dopar%
-      doParallel::registerDoParallel(cl = my.cluster)
-      
-      if ((CS - US) > 0 &
-          CS > 0  & US >= 0 & N >= 0 & PRICE > 0) {
-        # Loop to get distribution
-        panini$error_msg <- paste("")
-        panini$packs_needed_n <- foreach(
-          i = 1:MC,
-          .packages = c("vecsets"),
-          .combine = 'c'
-        ) %dopar% {
-          source("./R/panini.R", local = TRUE)
-          pcp_swap_mc(CS - US, M, N + 1)
-        }
-      }
-      else{
-        panini$error_msg <-
-          paste(i18n$t(
-            "Please, check the numbers on the left. Something is wrong :-/"
-          ))
+    req(input$CS, input$US, input$N, input$PRICE)
+    
+    # Constants
+    M <- 5
+    MC <- 100
+    CS <- input$CS
+    US <- input$US
+    N <- input$N
+    
+    if (CS > 1000) {
+      CS <- 1000
+    }
+    if (US > 1000) {
+      US <- 1000
+    }
+    if (N > 15) {
+      N <- 15
+    }
+    
+    # Setting for paralel computing
+    n.cores <- parallel::detectCores() - 1
+    my.cluster <- parallel::makeCluster(n.cores, type = "PSOCK")
+    # register it to be used by %dopar%
+    doParallel::registerDoParallel(cl = my.cluster)
+    
+    if ((CS - US) > 19 & CS > 0  & US >= 0 & N >= 0 & PRICE > 0) {
+      # Loop to get distribution
+      panini$error_msg <- paste("")
+      panini$packs_needed_n <- foreach(
+        i = 1:MC,
+        .packages = c("vecsets"),
+        .combine = 'c'
+      ) %dopar% {
+        source("./R/panini.R", local = TRUE)
+        pcp_swap_mc(CS - US, M, N + 1)
       }
     }
-    else
-    {
+    else{
       panini$error_msg <-
-        paste(i18n$t("Some values are missing :-/"))
+        paste(i18n$t(
+          "Please, check the numbers on the left. Something is wrong :-/"
+        ))
     }
   })
   
@@ -235,7 +223,5 @@ server <- function(input, output, session) {
     plot_density(panini$packs_needed_n)
   })
 }
-
-
 
 shinyApp(ui = ui, server = server)

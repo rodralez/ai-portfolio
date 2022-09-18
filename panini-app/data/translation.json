@@ -9,7 +9,7 @@
       "ES": "Cambia el idioma"
       },
       {"EN": "The Panini collector problem", 
-      "ES": "El problema del coleccionista de Panini"
+      "ES": "El problema del coleccionista Panini"
       },
       {"EN": "A web app to estimate how many packs to complete a Panini album",          
       "ES": "Web app para estimar el número de paquetes para llenar un album Panini"
@@ -69,6 +69,10 @@
       {
         "EN": "please read our report",
         "ES": "por favor lee nuestro reporte"      
+      },
+      {
+        "EN": "At least 20 stickers should be missing :-/",
+        "ES": "Al menos te deben faltar 20 figuritas :-/"      
       }
   ]
 }
