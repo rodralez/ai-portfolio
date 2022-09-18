@@ -159,55 +159,66 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$US, {
-    req(input$CS,input$US)
-    if ((input$CS - input$US) < 20) {
-      panini$error_msg <-
-        paste(i18n$t("At least 20 stickers should be missing :-/"))
+    if (req(input$CS, input$US)) {
+      if ((input$CS - input$US) < 20) {
+        panini$error_msg <-
+          paste(i18n$t("At least 20 stickers should be missing :-/"))
+      } else{
+        panini$error_msg <- paste("")
+      }
     } else{
-      panini$error_msg <- paste("")
+      panini$error_msg <-
+        paste(i18n$t(
+          "Please, check the numbers on the left. Something is wrong :-/"
+        ))
     }
   })
   
   # ====== Main observer
   observeEvent(input$panini_button, {
-    req(input$CS, input$US, input$N, input$PRICE)
-    
-    # Constants
-    M <- 5
-    MC <- 100
-    CS <- input$CS
-    US <- input$US
-    N <- input$N
-    
-    if (CS > 1000) {
-      CS <- 1000
-    }
-    if (US > 1000) {
-      US <- 1000
-    }
-    if (N > 15) {
-      N <- 15
-    }
-    
-    # Setting for paralel computing
-    n.cores <- parallel::detectCores() - 1
-    my.cluster <- parallel::makeCluster(n.cores, type = "PSOCK")
-    # register it to be used by %dopar%
-    doParallel::registerDoParallel(cl = my.cluster)
-    
-    if ((CS - US) > 19 & CS > 0  & US >= 0 & N >= 0 & PRICE > 0) {
-      # Loop to get distribution
-      panini$error_msg <- paste("")
-      panini$packs_needed_n <- foreach(
-        i = 1:MC,
-        .packages = c("vecsets"),
-        .combine = 'c'
-      ) %dopar% {
-        source("./R/panini.R", local = TRUE)
-        pcp_swap_mc(CS - US, M, N + 1)
+    if (req(input$CS, input$US, input$N)) {
+      # Constants
+      M <- 5
+      MC <- 100
+      CS <- input$CS
+      US <- input$US
+      N <- input$N
+      
+      if (CS > 1000) {
+        CS <- 1000
       }
-    }
-    else{
+      if (US > 1000) {
+        US <- 1000
+      }
+      if (N > 15) {
+        N <- 15
+      }
+      
+      # Setting for paralel computing
+      n.cores <- parallel::detectCores() - 1
+      my.cluster <- parallel::makeCluster(n.cores, type = "PSOCK")
+      # register it to be used by %dopar%
+      doParallel::registerDoParallel(cl = my.cluster)
+      
+      if ((CS - US) > 19 & CS > 0  & US >= 0 & N >= 0) {
+        # Loop to get distribution
+        panini$error_msg <- paste("")
+        panini$packs_needed_n <- foreach(
+          i = 1:MC,
+          .packages = c("vecsets"),
+          .combine = 'c'
+        ) %dopar% {
+          source("./R/panini.R", local = TRUE)
+          pcp_swap_mc(CS - US, M, N + 1)
+        }
+      }
+      else{
+        panini$error_msg <-
+          paste(i18n$t(
+            "Please, check the numbers on the left. Something is wrong :-/"
+          ))
+      }
+    } else{
       panini$error_msg <-
         paste(i18n$t(
           "Please, check the numbers on the left. Something is wrong :-/"
