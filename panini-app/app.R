@@ -38,7 +38,8 @@ ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "cosmo"),
   
   # App title ----
-  titlePanel(i18n$t("The Panini collector problem")),
+  titlePanel(i18n$t("The Panini collector problem"), 
+             windowTitle = "The Panini collector problem"),
   
   h3(
     i18n$t("A web app to estimate how many packs to complete a Panini album")
