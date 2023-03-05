@@ -31,7 +31,6 @@ Once the YOLOv5 container is running, the  Python script has to be copied to the
 
 ```
 /usr/src/app# cp ../metal_nut/code/python/metal_nut_yolov5_train.py . && python3 metal_nut_yolov5_train.py
-
 ```
 
 ## Validation
@@ -40,7 +39,6 @@ The validation step is implemented with
 
 ```
 /usr/src/app# cp ../metal_nut/code/python/metal_nut_yolov5_train.py . && python3 metal_nut_yolov5_train.py
-
 ```
 
 ## Conclusion
