@@ -2,11 +2,12 @@
 
 ## Projects
 
-###  Data Analysis of admitted students to high schools of the National University of Cuyo for the year 2022
+### Defect detection in metal nuts using vision AI
 
-Statistical analysis about the distribution of admitted new students to high schools of the National University of Cuyo (Spanish only)  [link](https://github.com/rodralez/ds-portfolio/tree/main/uncu-ingreso).
+How many images per class are needed to efectively train a YOLOv5 convolutional neural network?
+[link](https://github.com/rodralez/ds-portfolio/tree/main/metal_nut).
 
-Technologies: statistics, pdf scraping, R, markdown.
+Technologies: Python, YOLOv5, Docker.
 
 ### The Panini Collector Problem
 
@@ -22,4 +23,11 @@ A docker image can be found at [https://hub.docker.com/r/rodralez/panini-app](ht
 
 The web app is running at this [link](https://model01.ingenieria.uncuyo.edu.ar/panini-app/).
 
-Technologies: R, shiny app, docker.
+Technologies: R, Shiny App, Docker.
+
+
+###  Data Analysis of admitted students to high schools of the National University of Cuyo for the year 2022
+
+Statistical analysis about the distribution of admitted new students to high schools of the National University of Cuyo (Spanish only)  [link](https://github.com/rodralez/ds-portfolio/tree/main/uncuyo-ingreso).
+
+Technologies: statistics, pdf scraping, R, markdown.
