@@ -6,7 +6,7 @@
 
 The primary objective of this project is to utilize a YOLOv5 convolutional neural network to identify flaws in metal nuts. The dataset used for training and evaluation purposes is the [The MVTec Anomaly Detection Dataset (MVTec AD)](https://www.mvtec.com/company/research/datasets/mvtec-ad), which consists of nearly 30 images per defect category. Given that convolutional neural networks require a significant amount of data to train effectively, this project aims to investigate whether 30 images per class are sufficient to train a YOLOv5 network and achieve satisfactory results.
 
-To facilitate the training process, the metal nut images have been labeled for YOLOv5, and both the images and labels are available in the `data/metal_nut_org folder`.
+To facilitate the training process, the metal nut images have been labeled for YOLOv5, and both the images and labels are available in the `data/metal_nut_org` folder.
 
 ### YOLOv5 Docker
 
