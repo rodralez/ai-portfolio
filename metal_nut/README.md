@@ -4,17 +4,15 @@
 
 ## Introduction
 
-The main goal of this project is to train a YOLOv5 convolutional neural network to detect defects in metal nuts. 
+The primary objective of this project is to utilize a YOLOv5 convolutional neural network to identify flaws in metal nuts. The dataset used for training and evaluation purposes is the [The MVTec Anomaly Detection Dataset (MVTec AD)](https://www.mvtec.com/company/research/datasets/mvtec-ad), which consists of nearly 30 images per defect category. Given that convolutional neural networks require a significant amount of data to train effectively, this project aims to investigate whether 30 images per class are sufficient to train a YOLOv5 network and achieve satisfactory results.
 
-The images are taken from the [The MVTec Anomaly Detection Dataset (MVTec AD)](https://www.mvtec.com/company/research/datasets/mvtec-ad). This dataset has about 30 images per defect class. It is known that CNN are "data hungry". So, this project wants to ask the question, 
-
-*30 images per class are enough to train a YOLOv5 network and still get good results?.*
-
-The metal nuts images are labeled for YOLOv5. Images and labels can be found into the folder `data/metal_nut_org`.
+To facilitate the training process, the metal nut images have been labeled for YOLOv5, and both the images and labels are available in the `data/metal_nut_org folder`.
 
 ### YOLOv5 Docker
 
-A Docker image is used to implement a YOLOv5. It can be downloaded from [https://hub.docker.com/r/ultralytics/yolov5](https://hub.docker.com/r/ultralytics/yolov5).
+A Docker image is used to implement a YOLOv5. It can be downloaded from 
+
+[https://hub.docker.com/r/ultralytics/yolov5](https://hub.docker.com/r/ultralytics/yolov5).
 
 A YOLOv5 container is run with the following command:
 
