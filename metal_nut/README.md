@@ -47,9 +47,9 @@ The validation step is implemented with
 
 On average, the mAP50 is 0.374 for 10 cross validation experiments. For some experiments, the system reachs mAP50 0.75, as shown in the following images.
 
- 	![True images](val_batch0_labels.jpg)
+ 	![True images](https://github.com/rodralez/ds-portfolio/blob/main/metal_nut/val_batch0_labels.jpg)
  	
- 	![Predicted images](val_batch0_pred.jpg)
+ 	![Predicted images](https://github.com/rodralez/ds-portfolio/blob/main/metal_nut/val_batch0_pred.jpg)
  	
  	
 
