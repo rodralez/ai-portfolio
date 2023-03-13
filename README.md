@@ -2,6 +2,18 @@
 
 ## Projects
 
+### Data Science Challenge
+
+In this Data Science Challenge, two task were addressed:
+
+1. Task 1: Understand the data and prepare the pipeline to transform the data from the raw format to the requested form. 
+
+2. Task 2: The goal of this task is to solve business case involving the development of the analytical model using the provided data.
+
+[link](https://github.com/rodralez/ds-portfolio/tree/main/data-science-challenge).
+
+Technologies: Python, Numpy, Pandas, Data Wrangling, Scikit Learn, Supervised learning, Random forest classifier, Linear regression, Feature selection.
+
 ### Defect detection in metal nuts using vision AI
 
 How many images per class are needed to efectively train a YOLOv5 convolutional neural network?
