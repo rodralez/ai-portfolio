@@ -12,7 +12,7 @@ In this Data Science Challenge, two task were addressed:
 
 [link](https://github.com/rodralez/ds-portfolio/tree/main/data-science-challenge).
 
-Technologies: Python, Numpy, Pandas, Data Wrangling, Scikit Learn, Supervised learning, Random forest classifier, Linear regression, Feature selection.
+Technologies: Python, Jupyter notebook, Numpy, Pandas, Seaborn, Data Wrangling, Exploratory data analysis, Scikit Learn, Supervised learning, Random forest classifier, Linear regression, glnmet regression, Feature selection, Residual analysis.
 
 ### Defect detection in metal nuts using vision AI
 
