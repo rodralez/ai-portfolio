@@ -4,13 +4,25 @@
 
 ## Introduction
 
-The primary objective of this project is to utilize a YOLOv5 convolutional neural network to identify flaws in metal nuts. The dataset used for training and evaluation purposes is the [The MVTec Anomaly Detection Dataset (MVTec AD)](https://www.mvtec.com/company/research/datasets/mvtec-ad), which consists of nearly 30 images per defect category. Given that convolutional neural networks require a significant amount of data to train effectively, this project aims to investigate whether 30 images per class are sufficient to train a YOLOv5 network and achieve satisfactory results.
+The primary objective of this project is to utilize a YOLOv5 convolutional neural network to identify flaws in metal nuts. Given that convolutional neural networks require a significant amount of data to train effectively, this project aims to investigate whether 40 images per class are sufficient to train a YOLOv5 network and achieve satisfactory results.
 
-To facilitate the training process, the metal nut images have been labeled for YOLOv5, and both the images and labels are available in the `data/metal_nut_org` folder.
+### Dataset
+
+The dataset used for training and evaluation purposes is the [The MVTec Anomaly Detection Dataset (MVTec AD)](https://www.mvtec.com/company/research/datasets/mvtec-ad). This dataset comprises 206 images of metal nuts, with five defect labels and approximately 40 images per defect category. The five defect labels are: 
+
+1. bent
+2. color
+3. flip
+4. metal-nut
+5. scratch
+
+However, it's important to note that the metal-nut label is not a defect but a way to identify that a complete nut is being observed.
+
+To train a YOLOv5 network, the metal nut images should be labeled accordingly. The images were labeled using [Label Studio](https://labelstud.io/).  Both the labeled images and their respective labels are available in the `data/metal_nut_org` folder.
 
 ### YOLOv5 Docker
 
-A Docker image is used to implement a YOLOv5. It can be downloaded from 
+A Docker image is used to deploy the YOLOv5 network. It can be downloaded from: 
 
 [https://hub.docker.com/r/ultralytics/yolov5](https://hub.docker.com/r/ultralytics/yolov5).
 
@@ -25,7 +37,7 @@ $ docker run --ipc=host -it --gpus all -v /home/rodralez/metal_nut:/usr/src/meta
 
 The training step is controlled by the Python script `code/python/metal_nut_yolov5_train.py`. A cross-validation approach is implemented to train the system. Several training and validation datasets are created randomly sampling images from the  `data/metal_nut_org` folder.
 
-Once the YOLOv5 container is running, the  Python script has to be copied to the Docker container and runned,
+Once the YOLOv5 container is running, the  Python script has to be copied to the Docker container and run:
 
 ```
 /usr/src/app# cp ../metal_nut/code/python/metal_nut_yolov5_train.py . && python3 metal_nut_yolov5_train.py
@@ -33,21 +45,23 @@ Once the YOLOv5 container is running, the  Python script has to be copied to the
 
 ## Validation
 
-The validation step is implemented with
+The validation step is implemented with:
 
 ```
 /usr/src/app# cp ../metal_nut/code/python/metal_nut_yolov5_train.py . && python3 metal_nut_yolov5_train.py
 ```
 
+### Infered defects
+
+Next, some images of metal nuts are compared with true and infered labels. 
+
+True images            |  Predicted images 
+:-------------------------:|:-------------------------:
+![True images](./val_batch0_labels.jpg)  |  ![Predicted images](./val_batch0_pred.jpg)
+
+
 ## Conclusion
 
-On average, the mAP50 is 0.374 for 10 cross validation experiments. For some experiments, the system reachs mAP50 0.75, as shown in the following images.
+On average, the mAP50 of the YOLOv5 system 0.374 for 10 cross validation experiments. For some experiments, the system reachs mAP50 0.75.
 
-### True images
-
-![True images](./val_batch0_labels.jpg)
- 
-### Predicted images 
- 
-![Predicted images](./val_batch0_pred.jpg)
 

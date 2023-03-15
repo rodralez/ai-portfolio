@@ -5,4 +5,4 @@ A docker image can be found at [https://hub.docker.com/r/rodralez/panini-app](ht
 
 The web app is running [here](https://model01.ingenieria.uncuyo.edu.ar/panini-app/).
 
-
+Technologies: R, Shiny App, Docker.

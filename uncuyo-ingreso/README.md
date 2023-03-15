@@ -5,3 +5,5 @@
 Puede leer el reporte completo en el siguiente link:
 
 https://rpubs.com/rodralez/uncuyo-ingreso-2023
+
+Tecnologías: statistics, pdf scraping, R, markdown.
