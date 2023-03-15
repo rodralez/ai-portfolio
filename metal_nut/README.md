@@ -53,15 +53,16 @@ The validation step is implemented with:
 
 ### Infered defects
 
-Next, some images of metal nuts are compared with true and infered labels. 
+Next, images of metal nuts from the validation step of one cross-validation experiment are compared. It's worth noting that the inferred labels were not used to train the model and can be considered as unseen data.
 
-True images            |  Predicted images 
+
+True labels            |  Infered labels 
 :-------------------------:|:-------------------------:
 ![True images](./val_batch0_labels.jpg)  |  ![Predicted images](./val_batch0_pred.jpg)
 
 
 ## Conclusion
-
-On average, the mAP50 of the YOLOv5 system 0.374 for 10 cross validation experiments. For some experiments, the system reachs mAP50 0.75.
+ 
+The YOLOv5 system's average mAP50 score for detecting defects in metal nuts is 0.374 across 10 cross-validation experiments. However, in some particular experiments, the system achieved an mAP50 of 0.75. Based on these results, it can be concluded that using 40 images per label to make predictions is a threshold for the vision AI system to function optimally.
 
 
