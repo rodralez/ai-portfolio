@@ -18,13 +18,13 @@ Link to the conclusion presentation: [link](https://docs.google.com/presentation
 
 Technologies: Python, Jupyter notebook, Numpy, Pandas, Seaborn, Data Wrangling, Exploratory data analysis, Scikit Learn, Supervised learning, Random forest classifier, Linear regression, glnmet regression, Feature selection, Residual analysis.
 
-## Defect detection in metal nuts using vision AI
+## Defects detection in metal nuts by using vision IA multi-label object detection
 
-How many images per class are needed to efectively train a YOLOv5 convolutional neural network?
+How many images per class are needed to efectively train a YOLOv5 network to detect defects in metal nuts?
 
 Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/metal_nut).
 
-Technologies: Python, Image labeling, YOLOv5, Cross validation, Docker.
+Technologies: Python, Image labeling, YOLOv5, Object detection, Cross validation, Docker.
 
 ## The Panini Collector Problem
 
