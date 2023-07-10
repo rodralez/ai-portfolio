@@ -12,6 +12,11 @@ One of the main challenges of the project are:
 
 Link to the project: [link](https://github.com/rodralez/JurisGPT/)
 
+### Useful notebooks
+
+Implementing a simple Retrieval QA system using LLM Vinuca 7B locally in Spanish. [Link](https://github.com/rodralez/JurisGPT/blob/main/code/python/notebooks/babasonicos_retrieval_qa.ipynb) 
+
+ 
 Technologies: Langchain, Huggingface, LLM, Chroma DB, Vicuna LLM 7B, Text Generation Web UI, LoRA Fine-tuning, Retrieval QA, Summarization, Python, Jupyter notebook.
 
 
