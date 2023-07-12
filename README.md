@@ -69,7 +69,7 @@ Technologies used: R, R Shiny.
 
 A probabilistic framework to solve how many packs have to be purchased to complete a Panini album.
 
-Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/r-shiny-panini-app)
+Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/panini)
 
 Technologies: statistics, R, Markdown.
 
@@ -78,7 +78,7 @@ Technologies: statistics, R, Markdown.
 
 This is a shiny app based on rocker/shiny-verse. 
 
-Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/panini-app)
+Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/r-shiny-panini-app)
 
 Technologies: R, R Shiny, Docker.
 
