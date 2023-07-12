@@ -1,9 +1,9 @@
 # Rodrigo Gonzalez's data science and machine learning portfolio
 
 
-## JurisGPT: an AI-powered Retrieval QA System for the Supreme Court Rulings of the province of Mendoza, Argentina
+## JurisGPT: an AI-powered Summarization System for the Supreme Court Rulings of the Mendoza province, Argentina
 
-The project aims to develop an MVP retrieval question-answering system that utilizes the rulings of the Supreme Court of Justice of the province of Mendoza as a document corpus. Users will have the capability to ask questions based on the court's jurisprudence. The system employs several technologies such as LangChain, LLM Vicuna 13B, and Chroma DB, among others, and will be deployed on the AWS cloud. This comprehensive solution will enable efficient and accurate retrieval of information from the court's rulings, enhancing access to legal knowledge.
+The project aims to develop an MVP for a summarization system that utilizes the rulings of the Supreme Court of Justice. Users will have the capability to produce summaries based on the court's jurisprudence. The system employs several technologies such as LangChain, a local LLM Vicuna 7B, and Chroma DB, among others, and will be deployed on the AWS cloud. This comprehensive solution will enable efficient and accurate retrieval of information from the court's rulings, enhancing access to legal knowledge.
 
 One of the main challenges of the project are:
 
@@ -15,9 +15,8 @@ Link to the project: [link](https://github.com/rodralez/JurisGPT/)
 ### Useful notebooks
 
 Implementing a simple Retrieval QA system using LLM Vinuca 7B locally in Spanish. [Link](https://github.com/rodralez/JurisGPT/blob/main/code/python/notebooks/babasonicos_retrieval_qa.ipynb) 
-
  
-Technologies: Langchain, Huggingface, LLM, Chroma DB, Vicuna LLM 7B, Text Generation Web UI, LoRA Fine-tuning, Retrieval QA, Summarization, Python, Jupyter notebook.
+Technologies: Langchain, Huggingface, LLM, Chroma DB, Vicuna LLM 7B, Text Generation Web UI, LoRA Fine-tuning, Summarization, Retrieval QA, Python, Jupyter notebook.
 
 
 ## Data Science Challenge
