@@ -47,6 +47,27 @@ Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/m
 Technologies: Python, Label Studio, YOLOv5, Object detection, Cross validation, Docker.
 
 
+## R Shiny Application for Species Observations in European Countries
+
+This project is a dashboard built using R Shiny that allows users to visualize and analyze species observations on a map. The main goals of this project are:
+
+1. **Visualize Species Observations**: The dashboard provides a map that displays the locations of species observations. The observations are represented as circle markers on the map.
+
+2. **Search Species**: Users can search for species by their vernacular name or scientific name. The dashboard provides an autocomplete field where users can enter the species name and select from the available options.
+
+3. **European Country Dataset**: The dataset used in this project includes observations from several European countries. Data is taken from the Global Biodiversity Information Facility ([https://www.gbif.org/](https://www.gbif.org/)). 
+
+4. **CSS Styling**: The dashboard has been styled using CSS to enhance the visual appeal and improve the user experience.
+
+5. **Deployment**: The application has been deployed to [shinyapps.io](https://www.shinyapps.io/), making it accessible online.
+
+Visit [https://rodralez.shinyapps.io/biodiversity/](https://rodralez.shinyapps.io/biodiversity/) to access the application online.
+
+Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/r-shiny-biodiversity)
+
+Technologies: R, R Shiny, ShinyDashboards, Leaflet maps, CSS, JavaScript, Shinyapps.io.
+
+
 ## R Shiny Application for Gene Symbol and GO Term Search
 
 The R Shiny application efficiently addresses the following tasks:
@@ -61,7 +82,7 @@ You have two options to run this application:
 1. Execute the `app.R` file using RStudio.
 2. Visit [https://rodralez.shinyapps.io/gene-app/](https://rodralez.shinyapps.io/gene-app/) to access the application online.
 
-Technologies used: R, R Shiny.
+Technologies: R, R Shiny, Shinyapps.io.
 
 
 ## The Panini Collector Problem
