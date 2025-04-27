@@ -26,15 +26,17 @@ async def test_graph() -> None:
 
     messages = [
         # [HumanMessage(content= "Hello, how are you?")],
-        [HumanMessage(content= "Hello, I am a homeowner")]
+        # [HumanMessage(content= "Hello, I am a homeowner")]
+        [HumanMessage(content= "Hello, I am a resident")],
+        [HumanMessage(content= "I am looking for a place to live in Denver")],
     ]
  
     try:
         for message in messages:
             result = await graph.ainvoke({"messages": message}, config=thread_config)
             logger.info(result)
-        # async for chunk in graph.astream({"event": test_event, }, config=thread_config, stream_mode="values"):
-        #     print(chunk)
+            # async for chunk in graph.astream({"messages": message}, config=thread_config, stream_mode="values"):
+            #    logger.info(result)
     except NodeInterrupt as e:
         logger.info(e)
         return e
@@ -48,9 +50,7 @@ async def test_graph() -> None:
     for message in messages:
         logger.info(message.content)
 
-    assert "response" in result, "Expected response in result"
-    # response = json.loads(result["response"])
-    # assert "summary" in response, "Expected message in response body"
+    assert "messages" in result, "Expected response in result"
     print("All assertions passed!")
 
 

@@ -1,32 +1,21 @@
-from dataclasses import dataclass, field
-from pydantic import BaseModel
-from typing_extensions import Annotated, TypedDict
+from dataclasses import dataclass #, field
+from typing_extensions import Annotated #, TypedDict
 from typing import (
-    Any,
-    Callable,
     Literal,
-    Optional,
-    Sequence,
-    Type,
-    TypeVar,
-    Union,
-    cast,
+    List,
+    # Any,
+    # Callable,
+    # Optional,
+    # Sequence,
+    # Type,
+    # TypeVar,
+    # Union,
+    # cast,
 )
-from typing import List
-from langchain_core.messages import AIMessage, BaseMessage, SystemMessage, ToolMessage
-from langgraph.managed import IsLastStep, RemainingSteps
+
+from langchain_core.messages import AnyMessage # BaseMessage, AIMessage, SystemMessage, ToolMessage
 from langgraph.graph import add_messages
-from langchain_core.messages import AnyMessage
-StructuredResponse = Union[dict, BaseModel]
 
-class AgentState(TypedDict):
-    """The state of the agent."""
-    messages: Annotated[Sequence[BaseMessage], add_messages]
-    is_last_step: IsLastStep
-    remaining_steps: RemainingSteps
-    structured_response: StructuredResponse
-
-# GRAPH STATES
 # @dataclass(kw_only=True)
 # class InputState:
 #     """Input state defines the interface between the graph and the user (external API)."""
@@ -37,7 +26,6 @@ class AgentState(TypedDict):
 @dataclass(kw_only=True)
 class State:
     """The state of the graph."""
-    response: str = ""
     messages: Annotated[List[AnyMessage], add_messages]
     # Welcome agent
     welcome_complete: bool = False
@@ -51,14 +39,19 @@ class State:
     homeowner_are_utilities_on: bool = False
     homeowner_is_onboarded: bool = False
     # Resident agent
+    resident_bedrooms: int = 0
+    resident_bathrooms: int = 0
+    resident_city: str = ""
+    resident_budget: float = 0.0
+    resident_additional_preferences: str = ""
+    resident_selected_listing_id: str = ""
+    resident_tour_datetime: str = ""
     resident_is_onboarded: bool = False
-
+  
 # @dataclass(kw_only=True)
 class OutputState():
     """The response object for the end user.
     This class defines the structure of the output that will be provided
     to the user after the graph's execution is complete.
     """
-    response: str = ""
     messages: Annotated[List[AnyMessage], add_messages]
-    pass
