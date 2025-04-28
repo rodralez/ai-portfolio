@@ -28,24 +28,11 @@ class State:
     """The state of the graph."""
     messages: Annotated[List[AnyMessage], add_messages]
     # Welcome agent
-    welcome_complete: bool = False
     client_type: Literal["homeowner", "resident", "unsure"] = "unsure"
+    welcome_complete: bool = False
     # Homeowner agent
-    homeowner_name: str = ""
-    homeowner_contact: str = ""
-    homeowner_home_address: str = ""
-    homeowner_meeting_datetime: str = ""
-    homeowner_is_vacant: bool = False
-    homeowner_are_utilities_on: bool = False
     homeowner_is_onboarded: bool = False
     # Resident agent
-    resident_bedrooms: int = 0
-    resident_bathrooms: int = 0
-    resident_city: str = ""
-    resident_budget: float = 0.0
-    resident_additional_preferences: str = ""
-    resident_selected_listing_id: str = ""
-    resident_tour_datetime: str = ""
     resident_is_onboarded: bool = False
   
 # @dataclass(kw_only=True)

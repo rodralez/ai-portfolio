@@ -305,6 +305,7 @@ How about May 2, 2025 at 10 a.m.?
 ## INPUT DATA
 ### 
 Previous messages: {messages}
+Current date: {current_date}
 ###
 """)
 
@@ -594,11 +595,10 @@ Let's see D202, and I'd like a tour on May 3 at 3 p.m.
 }}
 ```
 
----
-
 ## INPUT DATA
 ###  
 Previous messages: {messages}
+Current date: {current_date}
 ###
 """)
 

@@ -25,26 +25,34 @@ else:
 def welcome_routing_node(state: State) -> Literal["homeowner", "resident", "welcome"]:
     if state.welcome_complete:
         if state.client_type == "homeowner":
+            logger.info("Routing to homeowner node")
             return "homeowner"
         elif state.client_type == "resident":
+            logger.info("Routing to resident node")
             return "resident"
         else:
+            logger.info("Routing to welcome node")
             return "welcome"
     else:
+        logger.info("Routing to welcome node")
         return "welcome"
 
 
 def homeowner_routing_node(state: State) -> Literal["homeowner", "__end__" ]:
     if state.homeowner_is_onboarded:
+        logger.info("Routing to END node")
         return "__end__"
     else:
+        logger.info("Routing to homeowner node")
         return "homeowner"
 
 
 def resident_routing_node(state: State) -> Literal["resident", "__end__" ]:
     if state.resident_is_onboarded:
+        logger.info("Routing to END node")
         return "__end__"
     else:
+        logger.info("Routing to resident node")
         return "resident"
 
 # Create the graph

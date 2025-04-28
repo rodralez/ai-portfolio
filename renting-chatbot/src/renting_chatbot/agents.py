@@ -1,5 +1,6 @@
 import os
 from loguru import logger
+from datetime import datetime
 
 from langgraph.prebuilt import create_react_agent
 from langgraph.errors import NodeInterrupt
@@ -18,7 +19,6 @@ def welcome_node(state: State, config: dict):
     logger.info("Welcome agent...")
 
     messages = state.messages
-
     if messages is None:
         raise NodeInterrupt("No messages provided to the welcome agent.")
 
@@ -79,9 +79,12 @@ def homeowner_node(state: State, config: dict):
     logger.info("Homeowner agent...")
 
     messages = state.messages
+    if messages is None:
+        raise NodeInterrupt("No messages provided to the agent.")
     try:
         p = HOMEOWNER_AGENT_PROMPT.format(
             messages = messages,
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
 
         raw_model = init_model(config)
@@ -118,12 +121,6 @@ def homeowner_node(state: State, config: dict):
 
             return {
                 "messages": response['messages'],
-                "homeowner_name": homeowner_name,
-                "homeowner_contact": homeowner_contact,
-                "homeowner_home_address": homeowner_home_address,
-                "homeowner_meeting_datetime": homeowner_meeting_datetime,
-                "homeowner_is_vacant": is_home_vacant,
-                "homeowner_are_utilities_on": are_home_utilities_on,
                 "homeowner_is_onboarded": onboarding_complete
             }
         else:
@@ -138,9 +135,12 @@ def resident_node(state: State, config: dict):
     logger.info("Resident agent...")
 
     messages = state.messages
+    if messages is None:
+        raise NodeInterrupt("No messages provided to the agent.")
     try:
         p = RESIDENT_AGENT_PROMPT.format(
             messages = messages,
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
 
         raw_model = init_model(config)
@@ -183,15 +183,6 @@ def resident_node(state: State, config: dict):
 
             return {
                 "messages": response['messages'],
-                "resident_name": resident_name,
-                "resident_contact": resident_contact,
-                "resident_bedrooms": bedrooms,
-                "resident_bathrooms": bathrooms,
-                "resident_city": city,
-                "resident_budget": budget,
-                "resident_additional_preferences": additional_preferences,
-                "resident_selected_listing_id": selected_listing_id,
-                "resident_tour_datetime": tour_datetime,
                 "resident_is_onboarded": onboarding_complete
             }
         else:
