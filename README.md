@@ -1,6 +1,26 @@
 # Rodrigo Gonzalez's data science and machine learning portfolio
 
 
+## Renting Chatbot: An Intelligent Conversational Agent for Property Management
+
+This project is an intelligent conversational agent designed to automate property management interactions for both homeowners and residents. The system uses a state machine architecture with specialized agents that handle different user flows:
+
+1. **Homeowner Onboarding** - Collects property information and schedules inspections
+2. **Resident Matching** - Helps renters find suitable properties and schedule tours
+
+The chatbot architecture includes four primary nodes:
+1. **Welcome Agent** - Determines if the user is a homeowner or a resident
+2. **Homeowner Agent** - Handles property onboarding for homeowners
+3. **Resident Agent** - Facilitates property searching and tours for residents
+4. **User Node** - Collects user input and routes to appropriate agent nodes
+
+The system integrates several tools for scheduling meetings, property tours, notifying staff, and finding properties that match resident criteria.
+
+Link to the project: [link](https://github.com/rodralez/ai-portfolio/tree/main/renting-chatbot)
+
+Technologies: LangGraph, LangChain, OpenAI API, Python, JSON, REST API, Conversational AI, State Machine Architecture, Property Management Automation.
+
+
 ## JurisGPT: an AI-powered Summarization System for the Supreme Court Rulings of the Mendoza province, Argentina
 
 The project aims to develop an MVP for a summarization system that utilizes the rulings of the Supreme Court of Justice. Users will have the capability to produce summaries based on the court's jurisprudence. The system employs several technologies such as LangChain, a local LLM Vicuna 7B, and Chroma DB, among others, and will be deployed on the AWS cloud. This comprehensive solution will enable efficient and accurate retrieval of information from the court's rulings, enhancing access to legal knowledge.
