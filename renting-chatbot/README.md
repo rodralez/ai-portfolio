@@ -12,11 +12,12 @@ The system uses LangGraph and LangChain to create a conversational flow with spe
 
 ## Architecture
 
-The chatbot operates through a state machine with three primary agents:
+The chatbot operates through a state machine with four primary nodes:
 
 1. **Welcome Agent** - Determines if the user is a homeowner or a resident
 2. **Homeowner Agent** - Handles property onboarding for homeowners
 3. **Resident Agent** - Facilitates property searching and tours for residents
+4. **User Node** - Collects user input and routes to appropriate agent nodes
 
 ![Graph Diagram](static/graph.png)
 
@@ -27,7 +28,8 @@ The system works by:
 1. Starting with the Welcome Agent to classify the user
 2. Based on classification, routing to either the Homeowner or Resident Agent
 3. Capturing relevant information through structured conversations
-4. Triggering appropriate actions (scheduling inspections, property tours, etc.)
+4. The User Node handles transitions between states and collects user input
+5. Triggering appropriate actions (scheduling inspections, property tours, etc.)
 
 ## Agents
 
@@ -45,6 +47,12 @@ The system works by:
 - Searches available properties matching criteria
 - Schedules property tours
 - Notifies staff about scheduled tours
+
+### User Node
+- Collects and processes user input
+- Routes conversations to appropriate agent nodes based on the state
+- Manages conversation flow between different specialized agents
+- Handles interrupts for interactive user sessions
 
 ## Tools
 

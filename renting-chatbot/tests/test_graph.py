@@ -2,10 +2,18 @@ import os
 import sys
 import asyncio
 from loguru import logger
+from dotenv import load_dotenv
 
 # from langgraph.types import Command
 from langgraph.errors import NodeInterrupt
 from langchain_core.messages import HumanMessage #, ToolMessage, AIMessage, AnyMessage, SystemMessage, 
+
+# Load environment variables from the .env file (if it exists)
+# status = load_dotenv(dotenv_path='renting-chatbot/.env')
+# if status:
+#     logger.info("Environment variables loaded successfully.")
+# else:
+#     logger.info("No environment variables found.")
 
  # Get the parent directory of the script
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -25,10 +33,10 @@ async def test_graph() -> None:
     }
 
     messages = [
-        # [HumanMessage(content= "Hello, how are you?")],
+        [HumanMessage(content= "Hello there")],
         # [HumanMessage(content= "Hello, I am a homeowner")]
-        [HumanMessage(content= "Hello, I am a resident")],
-        [HumanMessage(content= "I am looking for a place to live in Denver")],
+        # [HumanMessage(content= "Hello, I am a resident")],
+        # [HumanMessage(content= "I am looking for a place to live in Denver")],
     ]
  
     try:
