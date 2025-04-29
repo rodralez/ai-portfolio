@@ -1,5 +1,4 @@
-# Rodrigo Gonzalez's data science and machine learning portfolio
-
+# Rodrigo Gonzalez's generative AI, data science and machine learning portfolio
 
 ## Renting Chatbot: An Intelligent Conversational Agent for Property Management
 
@@ -58,13 +57,13 @@ Link to the conclusion presentation: [link](https://docs.google.com/presentation
 Technologies: Python, Jupyter notebook, Numpy, Pandas, Seaborn, Data Wrangling, Exploratory data analysis, Scikit Learn, Supervised learning, Random forest classifier, Linear regression, glnmet regression, Feature selection, Residual analysis.
 
 
-## Defects detection in metal nuts by using vision IA multi-label object detection
+<!-- ## Defects detection in metal nuts by using vision IA multi-label object detection
 
 How many images per class are needed to efectively train a YOLOv5 network to detect defects in metal nuts?
 
 Link to the project: [link](https://github.com/rodralez/ds-portfolio/tree/main/metal_nut).
 
-Technologies: Python, Label Studio, YOLOv5, Object detection, Cross validation, Docker.
+Technologies: Python, Label Studio, YOLOv5, Object detection, Cross validation, Docker. -->
 
 
 ## R Shiny Application for Species Observations in European Countries
