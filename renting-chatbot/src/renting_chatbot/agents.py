@@ -5,7 +5,8 @@ from datetime import datetime
 from langgraph.prebuilt import create_react_agent
 from langgraph.errors import NodeInterrupt
 from langgraph.checkpoint.memory import MemorySaver
-# from langchain_core.messages import AIMessage #AnyMessage, SystemMessage, HumanMessage, ToolMessage, AIMessage, trim_messages
+from langchain_core.messages import HumanMessage #AIMessage AnyMessage, SystemMessage, HumanMessage, ToolMessage, AIMessage, trim_messages
+from langgraph.types import interrupt, Command
 
 from src.renting_chatbot.state import State
 from src.renting_chatbot.prompts import WELCOME_AGENT_PROMPT, HOMEOWNER_AGENT_PROMPT, RESIDENT_AGENT_PROMPT
@@ -27,34 +28,35 @@ def welcome_node(state: State, config: dict):
         first_message = "Yes"
     else:
         first_message = "No"
-
-    # replace placeholder with messages from state
-    p = WELCOME_AGENT_PROMPT.format(
-        messages = messages,
-        company_name = os.getenv("COMPANY_NAME"),
-        first_message = first_message
-    )
-
-    raw_model = init_model(config)
-    welcome_agent = create_react_agent(
-                                model = raw_model, 
-                                tools = [], 
-                                prompt = p,
-                                # response_format=WelcomeAgentResponse,
-                                # state_schema=CustomAgentState,
-                                # debug=True,
-                        )
-
-    response = welcome_agent.invoke({"messages": messages}, config = config )
-    
-    # Parse the JSON from the last message to extract onboarding_complete and client_type
     try:
+        # replace placeholder with messages from state
+        p = WELCOME_AGENT_PROMPT.format(
+            messages = messages,
+            company_name = os.getenv("COMPANY_NAME"),
+            first_message = first_message
+        )
+
+        raw_model = init_model(config)
+        welcome_agent = create_react_agent(
+                                    model = raw_model, 
+                                    tools = [], 
+                                    prompt = p,
+                                    # response_format=WelcomeAgentResponse,
+                                    # state_schema=CustomAgentState,
+                                    # debug=True,
+                            )
+
+        response = welcome_agent.invoke({"messages": messages}, config = config )
+
         last_message = response['messages'][-1].content
         # Check if the content is a valid JSON string
         result = extract_json_from_message(last_message)
+
+        # Parse the JSON from the last message to extract onboarding_complete and client_type
         
         if result is not None:
             ai_response = result.get("message", "")
+
             client_type = result.get("client_type", "unsure")
             welcome_complete = result.get("welcome_complete", False)
 
@@ -66,6 +68,7 @@ def welcome_node(state: State, config: dict):
                 "messages": response['messages'],
                 "welcome_complete": welcome_complete,
                 "client_type": client_type,
+                "next_node": "welcome"
             }
         else:
             logger.error(f"Error parsing JSON from welcome agent: {last_message}")
@@ -95,11 +98,11 @@ def homeowner_node(state: State, config: dict):
                                     )
 
         response = homeowner_agent.invoke({"messages": messages}, config = config )
-        
+
         last_message = response['messages'][-1].content
         # Check if the content is a valid JSON string
         result = extract_json_from_message(last_message)
-        
+
         if result is not None:
             ai_response = result.get("message", "")
             homeowner_name = result.get("name", None)
@@ -121,7 +124,8 @@ def homeowner_node(state: State, config: dict):
 
             return {
                 "messages": response['messages'],
-                "homeowner_is_onboarded": onboarding_complete
+                "homeowner_is_onboarded": onboarding_complete,
+                "next_node": "homeowner"
             }
         else:
             logger.error(f"Error parsing JSON from homeowner agent: {last_message}")
@@ -183,11 +187,37 @@ def resident_node(state: State, config: dict):
 
             return {
                 "messages": response['messages'],
-                "resident_is_onboarded": onboarding_complete
+                "resident_is_onboarded": onboarding_complete,
+                "next_node": "resident"
             }
         else:
             logger.error(f"Error parsing JSON from resident agent: {last_message}")
     except Exception as e:
         logger.error(f"Error parsing JSON from resident agent: {e}")
         raise NodeInterrupt("Error parsing JSON from resident agent")
-    
+
+
+from typing import Literal
+
+def user_node(state: State) -> Command[Literal['welcome', 'homeowner', 'resident']]:
+    """A node for collecting user input."""
+    logger.info("User node...")
+
+    last_message = state.messages[-1].content
+    result = extract_json_from_message(last_message)
+
+    if result is not None:
+        ai_query = result.get("message", "")
+    else:
+        ai_query = state.messages[-1].content
+
+    logger.info(f"User node, query: {ai_query}")
+    logger.info(f"User node, next node: {state.next_node}")
+
+    user_input = interrupt(value=ai_query)
+    logger.info(f"User node, user input: {user_input}")
+
+    return {
+           "messages": [HumanMessage(content=user_input)],
+           "next_node": state.next_node
+           }
