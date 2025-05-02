@@ -34,7 +34,7 @@ class State:
     homeowner_is_onboarded: bool = False
     # Resident agent
     resident_is_onboarded: bool = False
-    next_node: Literal["welcome", "homeowner", "resident", "user"] = "welcome"
+    next_node: Literal["welcome", "homeowner", "resident"] = "welcome"
   
 # @dataclass(kw_only=True)
 class OutputState():

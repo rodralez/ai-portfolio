@@ -10,7 +10,7 @@ from src.renting_chatbot.configuration import Configuration
 from src.renting_chatbot.state import State, OutputState
 from src.renting_chatbot.agents import welcome_node, homeowner_node, resident_node, user_node
 
-# We need this because we want to enable threads (conversations)
+# MemorySaver is used to save the state of the graph to memory
 checkpointer = MemorySaver()
 
 # Load environment variables from the .env file (if it exists)
@@ -20,7 +20,20 @@ if status:
 else:
     logger.info("No environment variables found.")
     
-def welcome_routing_node(state: State) -> Literal["homeowner", "resident", "user"]:
+
+def start_router(state: State) -> Literal["welcome", "homeowner", "resident"]:
+    # If onboarding not done, start with welcome
+    if not state.welcome_complete:
+        return "welcome"
+    # Otherwise jump directly to the client‑specific agent
+    if state.client_type == "homeowner":
+        return "homeowner"
+    if state.client_type == "resident":
+        return "resident"
+    return "welcome"  # fallback
+
+
+def welcome_router(state: State) -> Literal["homeowner", "resident", "user"]:
     if state.welcome_complete:
         if state.client_type == "homeowner":
             node = "homeowner"
@@ -30,27 +43,29 @@ def welcome_routing_node(state: State) -> Literal["homeowner", "resident", "user
             node = "user"
     else:
         node = "user"    
-    logger.info(f"Routing to {node} node")
+    logger.info(f"Welcome router, next node: {node}")
     return node
 
-def homeowner_routing_node(state: State) -> Literal["user", "__end__" ]:
+
+def homeowner_router(state: State) -> Literal["user", "__end__" ]:
     if state.homeowner_is_onboarded:
         node = "__end__"
     else:
         node = "user"
-    logger.info(f"Routing to {node} node")
+    logger.info(f"Homeowner router, next node: {node}")
     return node
 
 
-def resident_routing_node(state: State) -> Literal["user", "__end__" ]:
+def resident_router(state: State) -> Literal["user", "__end__" ]:
     if state.resident_is_onboarded:
         node = "__end__"
     else:
         node = "user"
-    logger.info(f"Routing to {node} node")
+    logger.info(f"Resident router, next node: {node}")
     return node
 
-def user_routing_node(state: State) -> Literal["welcome", "homeowner", "resident", "__end__" ]:
+
+def user_router(state: State) -> Literal["welcome", "homeowner", "resident"]:
     if state.next_node == "welcome":
         node = "welcome"
     elif state.next_node == "homeowner":
@@ -59,8 +74,9 @@ def user_routing_node(state: State) -> Literal["welcome", "homeowner", "resident
         node = "resident"
     else:
         node = "__end__"
-    logger.info(f"Routing to {node} node")
+    logger.info(f"User router, next node: {node}")
     return node
+
 # Create the graph
 workflow = StateGraph(
     State, output=OutputState, config_schema=Configuration
@@ -71,18 +87,17 @@ workflow.add_node("welcome", welcome_node)
 workflow.add_node("homeowner", homeowner_node)
 workflow.add_node("resident", resident_node)
 workflow.add_node("user", user_node)
-# Define the edges and control flow
 
-workflow.add_edge(START, "welcome")
-workflow.add_conditional_edges("welcome", welcome_routing_node)
-workflow.add_conditional_edges("homeowner", homeowner_routing_node)
-workflow.add_conditional_edges("resident", resident_routing_node)
-workflow.add_conditional_edges("user", user_routing_node)
+workflow.add_conditional_edges(START, start_router)
+workflow.add_conditional_edges("welcome", welcome_router)
+workflow.add_conditional_edges("homeowner", homeowner_router)
+workflow.add_conditional_edges("resident", resident_router)
+workflow.add_conditional_edges("user", user_router)
 
 # Compile the graph
 graph = workflow.compile(
     # checkpointer=checkpointer, # Comment to run LangGraph Studio
     # interrupt_after=["welcome", "homeowner", "resident"],
+    # debug=True,
+    name="RentingChatbot"
 )
-
-graph.name = "RentingChatbot"

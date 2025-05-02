@@ -1,10 +1,10 @@
 import os
 from loguru import logger
 from datetime import datetime
+from typing import Literal
 
 from langgraph.prebuilt import create_react_agent
 from langgraph.errors import NodeInterrupt
-from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import HumanMessage #AIMessage AnyMessage, SystemMessage, HumanMessage, ToolMessage, AIMessage, trim_messages
 from langgraph.types import interrupt, Command
 
@@ -23,11 +23,16 @@ def welcome_node(state: State, config: dict):
     if messages is None:
         raise NodeInterrupt("No messages provided to the welcome agent.")
 
+    if state.welcome_complete:
+        # Nothing to do, just pass through
+        return {"messages": state.messages, "next_node": state.next_node}
+
     messages_length = len(messages)
     if messages_length <= 1:
         first_message = "Yes"
     else:
         first_message = "No"
+
     try:
         # replace placeholder with messages from state
         p = WELCOME_AGENT_PROMPT.format(
@@ -52,8 +57,6 @@ def welcome_node(state: State, config: dict):
         # Check if the content is a valid JSON string
         result = extract_json_from_message(last_message)
 
-        # Parse the JSON from the last message to extract onboarding_complete and client_type
-        
         if result is not None:
             ai_response = result.get("message", "")
 
@@ -84,6 +87,11 @@ def homeowner_node(state: State, config: dict):
     messages = state.messages
     if messages is None:
         raise NodeInterrupt("No messages provided to the agent.")
+
+    if state.homeowner_is_onboarded:
+        # Nothing to do, just pass through
+        return {"messages": state.messages, "next_node": state.next_node}
+
     try:
         p = HOMEOWNER_AGENT_PROMPT.format(
             messages = messages,
@@ -141,6 +149,11 @@ def resident_node(state: State, config: dict):
     messages = state.messages
     if messages is None:
         raise NodeInterrupt("No messages provided to the agent.")
+
+    if state.resident_is_onboarded:
+        # Nothing to do, just pass through
+        return {"messages": state.messages, "next_node": state.next_node}
+
     try:
         p = RESIDENT_AGENT_PROMPT.format(
             messages = messages,
@@ -196,8 +209,6 @@ def resident_node(state: State, config: dict):
         logger.error(f"Error parsing JSON from resident agent: {e}")
         raise NodeInterrupt("Error parsing JSON from resident agent")
 
-
-from typing import Literal
 
 def user_node(state: State) -> Command[Literal['welcome', 'homeowner', 'resident']]:
     """A node for collecting user input."""
